@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loan Repayment Calculator — Himath Chandrasena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../lassn.css" />
+    <style>
+      .project-hero {
+        background: linear-gradient(
+          135deg,
+          #1a2a4a 0%,
+          #253f67 60%,
+          #2980b9 100%
+        );
+        color: white;
+        padding: 48px 32px;
+        border-radius: 16px;
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .project-hero::before {
+        content: "</>";
+        position: absolute;
+        right: 32px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 6rem;
+        font-family: "JetBrains Mono", monospace;
+        opacity: 0.08;
+        font-weight: 600;
+        color: white;
+      }
+
+      .project-hero h2 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        color: white;
+      }
+
+      .project-hero p {
+        opacity: 0.85;
+        max-width: 560px;
+        font-size: 1rem;
+        line-height: 1.7;
+      }
+
+      .badge-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .badge {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 4px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      .section-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #3498db;
+        margin-bottom: 12px;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .feature-item {
+        background: #f8fafc;
+        border: 1px solid #eef2f7;
+        border-radius: 10px;
+        padding: 14px 16px;
+        font-size: 0.9rem;
+        color: #475569;
+        font-weight: 500;
+      }
+
+      .feature-item span {
+        display: block;
+        font-size: 1.3rem;
+        margin-bottom: 6px;
+      }
+
+      /* Code block */
+      .code-block-wrapper {
+        background: #0d1117;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-top: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+      }
+
+      .code-header {
+        background: #161b22;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #30363d;
+      }
+
+      .code-header .dots {
+        display: flex;
+        gap: 6px;
+      }
+
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+
+      .dot-red {
+        background: #ff5f56;
+      }
+      .dot-yellow {
+        background: #ffbd2e;
+      }
+      .dot-green {
+        background: #27c93f;
+      }
+
+      .code-filename {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.78rem;
+        color: #8b949e;
+      }
+
+      .code-block-wrapper pre {
+        margin: 0;
+        padding: 24px 20px;
+        overflow-x: auto;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.82rem;
+        line-height: 1.7;
+        color: #e6edf3;
+      }
+
+      /* Syntax highlight classes */
+      .kw {
+        color: #ff7b72;
+      } /* keywords */
+      .inc {
+        color: #79c0ff;
+      } /* includes */
+      .fn {
+        color: #d2a8ff;
+      } /* functions */
+      .str {
+        color: #a5d6ff;
+      } /* strings */
+      .cm {
+        color: #8b949e;
+        font-style: italic;
+      } /* comments */
+      .num {
+        color: #f2cc60;
+      } /* numbers */
+      .tp {
+        color: #ffa657;
+      } /* types */
+
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #3498db;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 8px 0;
+        transition: gap 0.2s;
+      }
+
+      .back-btn:hover {
+        gap: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container" style="padding-top: 32px; padding-bottom: 48px">
+      <!-- Hero -->
+      <div class="project-hero">
+        <p
+          class="section-label"
+          style="color: rgba(255, 255, 255, 0.6); margin-bottom: 8px"
+        >
+          Academic Project
+        </p>
+        <h2>Loan Repayment Calculator</h2>
+        <p>
+          A console-based C++ application that calculates monthly loan
+          repayments, generates a full repayment schedule, and classifies the
+          loan type based on principal amount.
+        </p>
+        <div class="badge-row">
+          <span class="badge">C++</span>
+          <span class="badge">Console App</span>
+          <span class="badge">Math Logic</span>
+          <span class="badge">Loops & I/O</span>
+        </div>
+      </div>
+
+      <!-- What it does -->
+      <div class="card" style="margin-bottom: 16px">
+        <p class="section-label">What It Does</p>
+        <div class="features-grid">
+          <div class="feature-item">
+            <span>💰</span>Takes principal, term & interest rate as input
+          </div>
+          <div class="feature-item">
+            <span>📊</span>Generates a full monthly repayment schedule
+          </div>
+          <div class="feature-item">
+            <span>🏷️</span>Classifies loan as Micro, Standard or Premium
+          </div>
+          <div class="feature-item">
+            <span>✅</span>Calculates total interest & service fee
+          </div>
+        </div>
+      </div>
+
+      <!-- Source Code -->
+      <div class="card">
+        <p class="section-label">Source Code</p>
+        <div class="code-block-wrapper">
+          <div class="code-header">
+            <div class="dots">
+              <div class="dot dot-red"></div>
+              <div class="dot dot-yellow"></div>
+              <div class="dot dot-green"></div>
+            </div>
+            <span class="code-filename">loan_calculator.cpp</span>
+          </div>
+          <pre><code><span class="inc">#include&lt;iostream&gt;</span>
+<span class="inc">#include&lt;string&gt;</span>
+<span class="inc">#include&lt;iomanip&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="tp">int</span> <span class="fn">main</span>()
+{
+    <span class="tp">double</span> pa, air, mir, pp, rb, tip, tm, ip;
+    <span class="tp">string</span> lt;
+    <span class="tp">int</span> sf;
+    tip = <span class="num">0.0</span>;
+
+    cout &lt;&lt; <span class="str">"Enter principal loan amount: "</span>;
+    cin &gt;&gt; pa;
+    cout &lt;&lt; <span class="str">"Enter your total Number of Monthly Payments: "</span>;
+    cin &gt;&gt; tm;
+    cout &lt;&lt; <span class="str">"Enter your annual interest rate: "</span>;
+    cin &gt;&gt; air;
+
+    mir = (air / <span class="num">100</span>) / <span class="num">12</span>;
+    pp  = pa / tm;
+    rb  = pa;
+
+    cout &lt;&lt; <span class="str">"_____Repayment Schedule_____"</span> &lt;&lt; endl;
+    cout &lt;&lt; setw(<span class="num">8</span>)  &lt;&lt; left  &lt;&lt; <span class="str">"Month"</span>
+         &lt;&lt; setw(<span class="num">15</span>) &lt;&lt; right &lt;&lt; <span class="str">"Interest"</span>
+         &lt;&lt; setw(<span class="num">15</span>) &lt;&lt; right &lt;&lt; <span class="str">"Principal"</span>
+         &lt;&lt; setw(<span class="num">15</span>) &lt;&lt; right &lt;&lt; <span class="str">"Total"</span>
+         &lt;&lt; setw(<span class="num">15</span>) &lt;&lt; right &lt;&lt; <span class="str">"Remaining"</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"_____________________________________________________________________"</span> &lt;&lt; endl;
+
+    <span class="kw">for</span> (<span class="tp">int</span> m = <span class="num">1</span>; m &lt;= tm; m++)
+    {
+        ip          = rb * mir;
+        <span class="tp">double</span> tmp  = pp + ip;
+        rb          = rb - pp;
+        tip         = tip + ip;
+
+        cout &lt;&lt; setw(<span class="num">8</span>)  &lt;&lt; left  &lt;&lt; m
+             &lt;&lt; setw(<span class="num">15</span>) &lt;&lt; right &lt;&lt; ip
+             &lt;&lt; setw(<span class="num">15</span>) &lt;&lt; right &lt;&lt; pp
+             &lt;&lt; setw(<span class="num">15</span>) &lt;&lt; right &lt;&lt; tmp
+             &lt;&lt; setw(<span class="num">15</span>) &lt;&lt; right &lt;&lt; rb &lt;&lt; endl;
+    }
+
+    cout &lt;&lt; <span class="str">"\n_____Final Loan Summary_____"</span> &lt;&lt; endl;
+
+    <span class="kw">if</span> (pa &lt; <span class="num">50000</span>)
+    {
+        lt = <span class="str">"Micro Loan"</span>;
+        sf = <span class="num">100</span>;
+    }
+    <span class="kw">else if</span> (pa &gt;= <span class="num">50000</span> &amp;&amp; pa &lt;= <span class="num">1000000</span>)
+    {
+        lt = <span class="str">"Standard Loan"</span>;
+        sf = <span class="num">500</span>;
+    }
+    <span class="kw">else</span>
+    {
+        lt = <span class="str">"Premium Loan"</span>;
+        sf = <span class="num">1000</span>;
+    }
+
+    <span class="tp">double</span> tamountp = pa + tip + sf;
+
+    cout &lt;&lt; <span class="str">"Loan Classification: "</span>              &lt;&lt; lt       &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"Mandatory Service Fee: RS"</span>          &lt;&lt; sf       &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"Total Interest Paid: RS"</span>            &lt;&lt; tip      &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"Total Amount Needed to Settle: RS"</span> &lt;&lt; tamountp &lt;&lt; endl;
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- Back link -->
+      <div style="margin-top: 24px">
+        <a href="../index.html" class="back-btn">← Back to Portfolio</a>
+      </div>
+    </main>
+  </body>
+</html>

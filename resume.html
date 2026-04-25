@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Resume — Himath Chandrasena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="lassn.css" />
+    <style>
+      body {
+        font-family: "Outfit", sans-serif;
+      }
+
+      .resume-hero {
+        background: linear-gradient(
+          90deg,
+          rgba(52, 152, 219, 0.08),
+          rgba(37, 63, 103, 0.02)
+        );
+        border-radius: 16px;
+        padding: 36px 40px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        flex-wrap: wrap;
+        border: 1px solid rgba(52, 152, 219, 0.1);
+      }
+
+      .resume-hero h1 {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 3.2rem;
+        font-weight: 700;
+        font-style: italic;
+        color: #253f67;
+        letter-spacing: 0px;
+        margin-bottom: 6px;
+        line-height: 1;
+      }
+
+      .resume-hero .tagline {
+        color: #3498db;
+        font-weight: 500;
+        font-size: 0.95rem;
+        margin-bottom: 16px;
+        letter-spacing: 0.3px;
+      }
+
+      .contact-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .contact-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-size: 0.82rem;
+        color: #475569;
+        text-decoration: none;
+        font-weight: 500;
+        transition:
+          border-color 0.15s,
+          color 0.15s;
+      }
+      .contact-chip:hover {
+        border-color: #3498db;
+        color: #3498db;
+      }
+
+      .hero-badge {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 18px 22px;
+        text-align: center;
+        min-width: 130px;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(13, 30, 63, 0.06);
+      }
+      .hero-badge .badge-emoji {
+        font-size: 1.8rem;
+        display: block;
+        margin-bottom: 6px;
+      }
+      .hero-badge .badge-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #3498db;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .section-label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2.5px;
+        color: #3498db;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #eef2f7;
+      }
+
+      .edu-item {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        margin-bottom: 24px;
+      }
+      .edu-item:last-child {
+        margin-bottom: 0;
+      }
+      .edu-icon {
+        width: 42px;
+        height: 42px;
+        background: linear-gradient(135deg, #3498db, #253f67);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+      }
+      .edu-body h4 {
+        font-size: 0.97rem;
+        font-weight: 600;
+        color: #253f67;
+        margin-bottom: 4px;
+      }
+      .edu-meta {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.78rem;
+        color: #94a3b8;
+        margin-bottom: 10px;
+      }
+      .achievement-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 8px;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+        color: #16a34a;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .skills-section {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .skill-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .skill-category {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.74rem;
+        color: #3498db;
+        font-weight: 600;
+        min-width: 88px;
+        padding-top: 5px;
+      }
+      .skill-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .skill-tag {
+        background: #e2e8f0;
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: #475569;
+      }
+
+      .projects-grid-resume {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .project-card {
+        background: #f8fafc;
+        border: 1px solid #eef2f7;
+        border-radius: 12px;
+        padding: 18px;
+        transition: transform 0.2s;
+      }
+      .project-card h4 {
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: #253f67;
+        margin-bottom: 6px;
+      }
+      .project-card p {
+        font-size: 0.82rem;
+        color: #64748b;
+        line-height: 1.6;
+      }
+
+      .interests-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .interest-item {
+        background: #f8fafc;
+        border: 1px solid #eef2f7;
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+      }
+
+      .resume-footer {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 28px;
+      }
+
+      @media (max-width: 600px) {
+        .resume-hero {
+          padding: 24px 20px;
+        }
+        .hero-badge {
+          display: none;
+        }
+        .projects-grid-resume {
+          grid-template-columns: 1fr;
+        }
+        .interests-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <div class="resume-hero">
+        <div>
+          <h1>Himath Chandrasena</h1>
+          <p class="tagline">Aspiring Software Engineer & AI Developer</p>
+          <div class="contact-row">
+            <a href="mailto:Himath.Chandrasena@gmail.com" class="contact-chip"
+              >✉️ Himath.Chandrasena@gmail.com</a
+            >
+            <a
+              href="https://github.com/HimathKc"
+              target="_blank"
+              class="contact-chip"
+              >🐙 github.com/HimathKc</a
+            >
+            <span class="contact-chip">📍 Kandy, Sri Lanka</span>
+          </div>
+        </div>
+        <div class="hero-badge">
+          <span class="badge-emoji">🏆</span>
+          <span class="badge-label">Batch Top</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="section-label">Education</p>
+
+        <!-- Current Education -->
+        <div class="edu-item">
+          <div class="edu-icon">🎓</div>
+          <div class="edu-body">
+            <h4>Diploma in Computer Science &amp; Artificial Intelligence</h4>
+            <p class="edu-meta">NIBM &nbsp;·&nbsp; Jan 2026 – Present</p>
+            <p class="edu-modules" style="font-size: 0.84rem; color: #64748b">
+              Focus: Computer Programming,Data Communication and Computer
+              Networks,Introduction to Computer Systems,Mathematics for Computer
+              Science,Relational Database Management Systems,Introduction to
+              Artificial Intelligence.
+            </p>
+          </div>
+        </div>
+
+        <!-- Previous Education -->
+        <div class="edu-item">
+          <div class="edu-icon" style="background: #e2e8f0; color: #253f67">
+            🎓
+          </div>
+          <div class="edu-body">
+            <h4>
+              Foundation in Computer Science &amp; Artificial Intelligence
+            </h4>
+            <p class="edu-meta">NIBM &nbsp;·&nbsp; Completed 2025</p>
+            <div class="achievement-pill">
+              🏆 Batch Top — ICS Exam (Nov 2025)
+            </div>
+            <p class="edu-modules" style="font-size: 0.84rem; color: #64748b">
+              Modules: Introduction to C++,Introduction to Python,Introduction
+              to Database Systems management, Mathematics for AI,Introduction to
+              Computer systems,Introduction to AI,Introduction to
+              Statistics,Electronics for Robotics and IOT.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="section-label">Technical Skills</p>
+        <div class="skills-section">
+          <div class="skill-row">
+            <span class="skill-category">Languages</span>
+            <div class="skill-tags">
+              <span class="skill-tag">C++</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">HTML5/CSS3</span>
+              <span class="skill-tag">JavaScript</span>
+            </div>
+          </div>
+          <div class="skill-row">
+            <span class="skill-category">Databases</span>
+            <div class="skill-tags">
+              <span class="skill-tag">MySQL</span>
+              <span class="skill-tag">Normalization</span>
+              <span class="skill-tag">ER Diagrams</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="section-label">Academic Projects</p>
+        <div class="projects-grid-resume">
+          <div class="project-card">
+            <h4>Loan Repayment Calculator</h4>
+            <p>
+              C++ console application to calculate monthly repayments and
+              schedules with principal-based classification.
+            </p>
+          </div>
+          <div class="project-card">
+            <h4>Hospital Management DB</h4>
+            <p>
+              Relational schema for patients and appointments using MySQL and ER
+              diagrams for data integrity.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="section-label">Interests</p>
+        <div class="interests-grid">
+          <div class="interest-item">
+            <span style="font-size: 1.2rem; display: block">🤖</span>
+            <span style="font-size: 0.8rem; font-weight: 600">AI & Dev</span>
+          </div>
+          <div class="interest-item">
+            <span style="font-size: 1.2rem; display: block">⚽</span>
+            <span style="font-size: 0.8rem; font-weight: 600">Real Madrid</span>
+          </div>
+          <div class="interest-item">
+            <span style="font-size: 1.2rem; display: block">🎮</span>
+            <span style="font-size: 0.8rem; font-weight: 600">Tech Gaming</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="resume-footer">
+        <a
+          href="index.html"
+          class="btn"
+          style="background: #fff; color: #475569; border: 1px solid #e2e8f0"
+          >← Back to Portfolio</a
+        >
+        <button onclick="window.print()" class="btn">Save as PDF</button>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,1011 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hospital Database Design — Himath Chandrasena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../lassn.css" />
+    <style>
+      .project-hero {
+        background: linear-gradient(
+          135deg,
+          #0f2027 0%,
+          #1a3a4a 55%,
+          #1a6b5a 100%
+        );
+        color: white;
+        padding: 48px 32px;
+        border-radius: 16px;
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .project-hero::before {
+        content: "🗄";
+        position: absolute;
+        right: 32px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 7rem;
+        opacity: 0.07;
+      }
+
+      .project-hero h2 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        color: white;
+      }
+
+      .project-hero p {
+        opacity: 0.85;
+        max-width: 560px;
+        font-size: 1rem;
+        line-height: 1.7;
+      }
+
+      .badge-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .badge {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 4px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      .section-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #16a37a;
+        margin-bottom: 12px;
+      }
+
+      /* Schema diagram */
+      .schema-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .schema-table {
+        background: #f8fafc;
+        border: 1px solid #eef2f7;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .schema-table-header {
+        background: #0f2027;
+        color: white;
+        padding: 8px 14px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        font-family: "JetBrains Mono", monospace;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .schema-table-header .tbl-icon {
+        font-size: 0.75rem;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
+        padding: 2px 6px;
+        color: #7ee8c8;
+      }
+
+      .schema-table ul {
+        list-style: none;
+        padding: 10px 14px;
+        margin: 0;
+      }
+
+      .schema-table ul li {
+        font-size: 0.82rem;
+        font-family: "JetBrains Mono", monospace;
+        color: #475569;
+        padding: 3px 0;
+        border-bottom: 1px solid #f1f5f9;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .schema-table ul li:last-child {
+        border-bottom: none;
+      }
+
+      .field-type {
+        color: #94a3b8;
+        font-size: 0.75rem;
+      }
+
+      .pk {
+        color: #f59e0b;
+        font-weight: 700;
+      }
+      .fk {
+        color: #16a37a;
+        font-weight: 700;
+      }
+
+      /* Relationships */
+      .rel-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .rel-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #f8fafc;
+        border: 1px solid #eef2f7;
+        border-radius: 10px;
+        padding: 12px 16px;
+      }
+
+      .rel-icon {
+        font-size: 1.2rem;
+        width: 32px;
+        text-align: center;
+      }
+
+      .rel-text {
+        font-size: 0.9rem;
+        color: #334155;
+      }
+
+      .rel-text strong {
+        color: #0f2027;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.85rem;
+      }
+
+      .rel-badge {
+        margin-left: auto;
+        background: #e0fdf4;
+        color: #059669;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-family: "JetBrains Mono", monospace;
+        white-space: nowrap;
+      }
+
+      /* Code block */
+      .code-block-wrapper {
+        background: #0d1117;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-top: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+      }
+
+      .code-header {
+        background: #161b22;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #30363d;
+      }
+
+      .code-header .dots {
+        display: flex;
+        gap: 6px;
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+      .dot-red {
+        background: #ff5f56;
+      }
+      .dot-yellow {
+        background: #ffbd2e;
+      }
+      .dot-green {
+        background: #27c93f;
+      }
+
+      .code-filename {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.78rem;
+        color: #8b949e;
+      }
+
+      .code-block-wrapper pre {
+        margin: 0;
+        padding: 24px 20px;
+        overflow-x: auto;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.82rem;
+        line-height: 1.7;
+        color: #e6edf3;
+      }
+
+      .kw {
+        color: #ff7b72;
+      }
+      .fn {
+        color: #d2a8ff;
+      }
+      .str {
+        color: #a5d6ff;
+      }
+      .cm {
+        color: #8b949e;
+        font-style: italic;
+      }
+      .tp {
+        color: #ffa657;
+      }
+      .dt {
+        color: #7ee8c8;
+      }
+      .num {
+        color: #f2cc60;
+      }
+
+      /* Query results table */
+      .result-table-wrap {
+        overflow-x: auto;
+        margin-top: 12px;
+        border-radius: 10px;
+        border: 1px solid #eef2f7;
+      }
+
+      .result-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.8rem;
+      }
+
+      .result-table th {
+        background: #0f2027;
+        color: #7ee8c8;
+        padding: 10px 14px;
+        text-align: left;
+        font-weight: 600;
+      }
+
+      .result-table td {
+        padding: 8px 14px;
+        color: #475569;
+        border-bottom: 1px solid #f1f5f9;
+      }
+
+      .result-table tr:last-child td {
+        border-bottom: none;
+      }
+      .result-table tr:nth-child(even) td {
+        background: #f8fafc;
+      }
+
+      .status-pending {
+        color: #d97706;
+        font-weight: 600;
+      }
+      .status-completed {
+        color: #059669;
+        font-weight: 600;
+      }
+
+      /* Tabs */
+      .tabs {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+
+      .tab-btn {
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 7px 16px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        font-family: "JetBrains Mono", monospace;
+        cursor: pointer;
+        color: #64748b;
+        transition: all 0.15s;
+      }
+
+      .tab-btn.active {
+        background: #0f2027;
+        color: #7ee8c8;
+        border-color: #0f2027;
+      }
+
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #16a37a;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 8px 0;
+        transition: gap 0.2s;
+      }
+
+      .back-btn:hover {
+        gap: 10px;
+      }
+
+      /* ER diagram image */
+      .er-img-wrap {
+        background: #f8fafc;
+        border: 1px solid #eef2f7;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-top: 12px;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .er-img-wrap img {
+        max-width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .er-img-placeholder {
+        padding: 40px;
+        color: #94a3b8;
+        font-size: 0.9rem;
+      }
+
+      .er-img-placeholder .er-icon {
+        font-size: 3rem;
+        display: block;
+        margin-bottom: 12px;
+      }
+
+      .ops-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .op-item {
+        background: #f8fafc;
+        border: 1px solid #eef2f7;
+        border-radius: 10px;
+        padding: 14px;
+        text-align: center;
+      }
+
+      .op-item .op-icon {
+        font-size: 1.5rem;
+        display: block;
+        margin-bottom: 6px;
+      }
+      .op-item .op-label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #475569;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container" style="padding-top: 32px; padding-bottom: 48px">
+      <!-- Hero -->
+      <div class="project-hero">
+        <p
+          class="section-label"
+          style="color: rgba(126, 232, 200, 0.7); margin-bottom: 8px"
+        >
+          Academic Project
+        </p>
+        <h2>Hospital Management Database</h2>
+        <p>
+          A relational database designed for a hospital system — covering
+          patients, doctors, appointments, and medical tests. Built with MySQL
+          using ER diagrams, normalization, and full CRUD operations.
+        </p>
+        <div class="badge-row">
+          <span class="badge">MySQL</span>
+          <span class="badge">Relational Design</span>
+          <span class="badge">ER Diagrams</span>
+          <span class="badge">Normalization</span>
+          <span class="badge">CRUD</span>
+        </div>
+      </div>
+
+      <!-- Schema -->
+      <div class="card" style="margin-bottom: 16px">
+        <p class="section-label">Database Schema — 7 Tables</p>
+        <div class="schema-grid">
+          <div class="schema-table">
+            <div class="schema-table-header">
+              <span class="tbl-icon">PK</span>Patient
+            </div>
+            <ul>
+              <li>
+                <span class="pk">patient_id</span
+                ><span class="field-type">INT PK</span>
+              </li>
+              <li>full_name<span class="field-type">VARCHAR</span></li>
+              <li>dob<span class="field-type">DATE</span></li>
+            </ul>
+          </div>
+
+          <div class="schema-table">
+            <div class="schema-table-header">
+              <span class="tbl-icon">PK</span>Doctor
+            </div>
+            <ul>
+              <li>
+                <span class="pk">doctor_id</span
+                ><span class="field-type">INT PK</span>
+              </li>
+              <li>full_name<span class="field-type">VARCHAR</span></li>
+              <li>specialization<span class="field-type">VARCHAR</span></li>
+              <li>consultation_fee<span class="field-type">DECIMAL</span></li>
+            </ul>
+          </div>
+
+          <div class="schema-table">
+            <div class="schema-table-header">
+              <span class="tbl-icon">FK</span>Appointment
+            </div>
+            <ul>
+              <li>
+                <span class="pk">appointment_id</span
+                ><span class="field-type">INT PK</span>
+              </li>
+              <li>
+                <span class="fk">patient_id</span
+                ><span class="field-type">FK</span>
+              </li>
+              <li>
+                <span class="fk">doctor_id</span
+                ><span class="field-type">FK</span>
+              </li>
+              <li>app_date<span class="field-type">DATE</span></li>
+              <li>app_time<span class="field-type">TIME</span></li>
+              <li>status<span class="field-type">VARCHAR</span></li>
+            </ul>
+          </div>
+
+          <div class="schema-table">
+            <div class="schema-table-header">
+              <span class="tbl-icon">PK</span>TestType
+            </div>
+            <ul>
+              <li>
+                <span class="pk">test_type_id</span
+                ><span class="field-type">INT PK</span>
+              </li>
+              <li>test_name<span class="field-type">VARCHAR</span></li>
+            </ul>
+          </div>
+
+          <div class="schema-table">
+            <div class="schema-table-header">
+              <span class="tbl-icon">FK</span>TestTaken
+            </div>
+            <ul>
+              <li>
+                <span class="pk">test_taken_id</span
+                ><span class="field-type">INT PK</span>
+              </li>
+              <li>
+                <span class="fk">patient_id</span
+                ><span class="field-type">FK</span>
+              </li>
+              <li>
+                <span class="fk">test_type_id</span
+                ><span class="field-type">FK</span>
+              </li>
+              <li>date_performed<span class="field-type">DATE</span></li>
+              <li>outcome<span class="field-type">VARCHAR</span></li>
+              <li>charge_applied<span class="field-type">DECIMAL</span></li>
+            </ul>
+          </div>
+
+          <div class="schema-table">
+            <div class="schema-table-header">
+              <span class="tbl-icon">FK</span>Patient_Phone
+            </div>
+            <ul>
+              <li>
+                <span class="pk">phone_id</span
+                ><span class="field-type">INT PK</span>
+              </li>
+              <li>
+                <span class="fk">patient_id</span
+                ><span class="field-type">FK CASCADE</span>
+              </li>
+              <li>phone_number<span class="field-type">VARCHAR</span></li>
+            </ul>
+          </div>
+
+          <div class="schema-table">
+            <div class="schema-table-header">
+              <span class="tbl-icon">FK</span>Patient_Allergy
+            </div>
+            <ul>
+              <li>
+                <span class="pk">allergy_id</span
+                ><span class="field-type">INT PK</span>
+              </li>
+              <li>
+                <span class="fk">patient_id</span
+                ><span class="field-type">FK CASCADE</span>
+              </li>
+              <li>allergy_name<span class="field-type">VARCHAR</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Relationships -->
+      <div class="card" style="margin-bottom: 16px">
+        <p class="section-label">Relationships</p>
+        <div class="rel-list">
+          <div class="rel-item">
+            <span class="rel-icon">📅</span>
+            <span class="rel-text"
+              ><strong>Patient → Appointment</strong> — a patient can schedule
+              many appointments</span
+            >
+            <span class="rel-badge">1 : M</span>
+          </div>
+          <div class="rel-item">
+            <span class="rel-icon">🩺</span>
+            <span class="rel-text"
+              ><strong>Doctor → Appointment</strong> — a doctor conducts many
+              appointments</span
+            >
+            <span class="rel-badge">1 : M</span>
+          </div>
+          <div class="rel-item">
+            <span class="rel-icon">🧪</span>
+            <span class="rel-text"
+              ><strong>Patient → TestTaken</strong> — a patient undergoes many
+              tests</span
+            >
+            <span class="rel-badge">1 : M</span>
+          </div>
+          <div class="rel-item">
+            <span class="rel-icon">🔬</span>
+            <span class="rel-text"
+              ><strong>TestType → TestTaken</strong> — a test type defines many
+              test records</span
+            >
+            <span class="rel-badge">1 : M</span>
+          </div>
+          <div class="rel-item">
+            <span class="rel-icon">📱</span>
+            <span class="rel-text"
+              ><strong>Patient → Patient_Phone / Patient_Allergy</strong> —
+              multi-valued attributes handled as separate tables with CASCADE
+              delete</span
+            >
+            <span class="rel-badge">1 : M</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ER Diagram -->
+      <div class="card" style="margin-bottom: 16px">
+        <p class="section-label">ER Diagram (Hand-drawn)</p>
+        <div class="er-img-wrap">
+          <p
+            style="
+              font-size: 0.78rem;
+              font-weight: 700;
+              color: #16a37a;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+              margin-bottom: 12px;
+            "
+          >
+            Entities &amp; Attributes
+          </p>
+          <img
+            src="er-diagram.jpeg"
+            alt="Hospital Database — Entities and Attributes"
+            style="
+              margin-bottom: 20px;
+              max-width: 100%;
+              border-radius: 8px;
+              box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            "
+          />
+          <p
+            style="
+              font-size: 0.78rem;
+              font-weight: 700;
+              color: #16a37a;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+              margin-bottom: 12px;
+            "
+          >
+            ER Diagram
+          </p>
+          <img
+            src="er-diagram2.jpeg"
+            alt="Hospital Database ER Diagram"
+            style="
+              max-width: 100%;
+              border-radius: 8px;
+              box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            "
+          />
+        </div>
+        <p style="font-size: 0.82rem; color: #94a3b8; margin-top: 10px">
+          Entities: Patient, Doctor, Appointment, TestType, TestTaken
+          &nbsp;·&nbsp; Relationships: Schedules, Conducts, Undergoes,
+          Defined-by, Includes
+        </p>
+      </div>
+
+      <!-- SQL Code & Results -->
+      <div class="card" style="margin-bottom: 16px">
+        <p class="section-label">SQL Operations</p>
+        <div class="tabs">
+          <button class="tab-btn active" onclick="showTab('create')">
+            CREATE
+          </button>
+          <button class="tab-btn" onclick="showTab('insert')">INSERT</button>
+          <button class="tab-btn" onclick="showTab('select')">SELECT</button>
+          <button class="tab-btn" onclick="showTab('update')">UPDATE</button>
+          <button class="tab-btn" onclick="showTab('delete')">DELETE</button>
+        </div>
+
+        <!-- CREATE -->
+        <div class="tab-content active" id="tab-create">
+          <div class="code-block-wrapper">
+            <div class="code-header">
+              <div class="dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+              </div>
+              <span class="code-filename">create_tables.sql</span>
+            </div>
+            <pre><code><span class="kw">CREATE DATABASE</span> hospital;
+<span class="kw">USE</span> hospital;
+
+<span class="kw">CREATE TABLE</span> <span class="dt">Patient</span> (
+    patient_id    <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
+    full_name     <span class="tp">VARCHAR</span>(<span class="num">100</span>),
+    dob           <span class="tp">DATE</span>
+);
+
+<span class="kw">CREATE TABLE</span> <span class="dt">Doctor</span> (
+    doctor_id         <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
+    full_name         <span class="tp">VARCHAR</span>(<span class="num">100</span>),
+    specialization    <span class="tp">VARCHAR</span>(<span class="num">100</span>),
+    consultation_fee  <span class="tp">DECIMAL</span>(<span class="num">10</span>, <span class="num">2</span>)
+);
+
+<span class="kw">CREATE TABLE</span> <span class="dt">Appointment</span> (
+    appointment_id  <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
+    patient_id      <span class="tp">INT</span>,
+    doctor_id       <span class="tp">INT</span>,
+    app_date        <span class="tp">DATE</span>,
+    app_time        <span class="tp">TIME</span>,
+    status          <span class="tp">VARCHAR</span>(<span class="num">20</span>),
+    <span class="kw">FOREIGN KEY</span> (patient_id) <span class="kw">REFERENCES</span> <span class="dt">Patient</span>(patient_id),
+    <span class="kw">FOREIGN KEY</span> (doctor_id)  <span class="kw">REFERENCES</span> <span class="dt">Doctor</span>(doctor_id)
+);
+
+<span class="kw">CREATE TABLE</span> <span class="dt">TestType</span> (
+    test_type_id  <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
+    test_name     <span class="tp">VARCHAR</span>(<span class="num">100</span>)
+);
+
+<span class="kw">CREATE TABLE</span> <span class="dt">TestTaken</span> (
+    test_taken_id   <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
+    patient_id      <span class="tp">INT</span>,
+    test_type_id    <span class="tp">INT</span>,
+    date_performed  <span class="tp">DATE</span>,
+    outcome         <span class="tp">VARCHAR</span>(<span class="num">255</span>),
+    charge_applied  <span class="tp">DECIMAL</span>(<span class="num">10</span>, <span class="num">2</span>),
+    <span class="kw">FOREIGN KEY</span> (patient_id)   <span class="kw">REFERENCES</span> <span class="dt">Patient</span>(patient_id),
+    <span class="kw">FOREIGN KEY</span> (test_type_id) <span class="kw">REFERENCES</span> <span class="dt">TestType</span>(test_type_id)
+);
+
+<span class="kw">CREATE TABLE</span> <span class="dt">Patient_Phone</span> (
+    phone_id      <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
+    patient_id    <span class="tp">INT</span>,
+    phone_number  <span class="tp">VARCHAR</span>(<span class="num">15</span>),
+    <span class="kw">FOREIGN KEY</span> (patient_id) <span class="kw">REFERENCES</span> <span class="dt">Patient</span>(patient_id) <span class="kw">ON DELETE CASCADE</span>
+);
+
+<span class="kw">CREATE TABLE</span> <span class="dt">Patient_Allergy</span> (
+    allergy_id    <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
+    patient_id    <span class="tp">INT</span>,
+    allergy_name  <span class="tp">VARCHAR</span>(<span class="num">50</span>),
+    <span class="kw">FOREIGN KEY</span> (patient_id) <span class="kw">REFERENCES</span> <span class="dt">Patient</span>(patient_id) <span class="kw">ON DELETE CASCADE</span>
+);</code></pre>
+          </div>
+        </div>
+
+        <!-- INSERT -->
+        <div class="tab-content" id="tab-insert">
+          <div class="code-block-wrapper">
+            <div class="code-header">
+              <div class="dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+              </div>
+              <span class="code-filename">insert_data.sql</span>
+            </div>
+            <pre><code><span class="kw">INSERT INTO</span> <span class="dt">Patient</span> (full_name, dob) <span class="kw">VALUES</span>
+    (<span class="str">'Alice Silva'</span>,      <span class="str">'1995-04-12'</span>),
+    (<span class="str">'Bob Perera'</span>,       <span class="str">'1988-11-23'</span>),
+    (<span class="str">'Charlie Fernando'</span>, <span class="str">'2001-02-15'</span>);
+
+<span class="kw">INSERT INTO</span> <span class="dt">Doctor</span> (full_name, specialization, consultation_fee) <span class="kw">VALUES</span>
+    (<span class="str">'Dr. Sunil'</span>,     <span class="str">'Cardiologist'</span>,    <span class="num">3000.00</span>),
+    (<span class="str">'Dr. Priyantha'</span>, <span class="str">'General Surgeon'</span>, <span class="num">2500.00</span>);
+
+<span class="kw">INSERT INTO</span> <span class="dt">Appointment</span> (patient_id, doctor_id, app_date, app_time, status) <span class="kw">VALUES</span>
+    (<span class="num">1</span>, <span class="num">1</span>, <span class="str">'2026-01-28'</span>, <span class="str">'10:30:00'</span>, <span class="str">'pending'</span>),
+    (<span class="num">2</span>, <span class="num">2</span>, <span class="str">'2026-01-28'</span>, <span class="str">'14:00:00'</span>, <span class="str">'completed'</span>),
+    (<span class="num">3</span>, <span class="num">1</span>, <span class="str">'2026-01-29'</span>, <span class="str">'09:15:00'</span>, <span class="str">'pending'</span>),
+    (<span class="num">1</span>, <span class="num">2</span>, <span class="str">'2026-01-30'</span>, <span class="str">'11:30:00'</span>, <span class="str">'pending'</span>);
+
+<span class="kw">INSERT INTO</span> <span class="dt">TestType</span> (test_name) <span class="kw">VALUES</span>
+    (<span class="str">'Full Blood Count'</span>),
+    (<span class="str">'X-Ray Chest'</span>);
+
+<span class="kw">INSERT INTO</span> <span class="dt">TestTaken</span> (patient_id, test_type_id, date_performed, outcome, charge_applied) <span class="kw">VALUES</span>
+    (<span class="num">1</span>, <span class="num">1</span>, <span class="str">'2026-01-27'</span>, <span class="str">'Normal'</span>, <span class="num">1500.00</span>),
+    (<span class="num">2</span>, <span class="num">2</span>, <span class="str">'2026-01-27'</span>, <span class="str">'Clear'</span>,  <span class="num">4500.00</span>);
+
+<span class="kw">INSERT INTO</span> <span class="dt">Patient_Phone</span>   (patient_id, phone_number)  <span class="kw">VALUES</span> (<span class="num">1</span>, <span class="str">'0771234567'</span>);
+<span class="kw">INSERT INTO</span> <span class="dt">Patient_Allergy</span> (patient_id, allergy_name)  <span class="kw">VALUES</span> (<span class="num">1</span>, <span class="str">'Penicillin'</span>);</code></pre>
+          </div>
+        </div>
+
+        <!-- SELECT -->
+        <div class="tab-content" id="tab-select">
+          <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px">
+            Query results from the populated database:
+          </p>
+          <p
+            style="
+              font-size: 0.78rem;
+              font-family: &quot;JetBrains Mono&quot;, monospace;
+              color: #16a37a;
+              margin-bottom: 6px;
+            "
+          >
+            SELECT * FROM Patient;
+          </p>
+          <div class="result-table-wrap">
+            <table class="result-table">
+              <tr>
+                <th>patient_id</th>
+                <th>full_name</th>
+                <th>dob</th>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Alice Silva</td>
+                <td>1995-04-12</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Charlie Fernando</td>
+                <td>2001-02-15</td>
+              </tr>
+            </table>
+          </div>
+          <p
+            style="
+              font-size: 0.78rem;
+              font-family: &quot;JetBrains Mono&quot;, monospace;
+              color: #16a37a;
+              margin: 14px 0 6px;
+            "
+          >
+            SELECT * FROM Doctor;
+          </p>
+          <div class="result-table-wrap">
+            <table class="result-table">
+              <tr>
+                <th>doctor_id</th>
+                <th>full_name</th>
+                <th>specialization</th>
+                <th>consultation_fee</th>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Dr. Sunil</td>
+                <td>Cardiologist</td>
+                <td>3000.00</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Dr. Priyantha</td>
+                <td>Senior General Physician</td>
+                <td>2500.00</td>
+              </tr>
+            </table>
+          </div>
+          <p
+            style="
+              font-size: 0.78rem;
+              font-family: &quot;JetBrains Mono&quot;, monospace;
+              color: #16a37a;
+              margin: 14px 0 6px;
+            "
+          >
+            SELECT * FROM Appointment;
+          </p>
+          <div class="result-table-wrap">
+            <table class="result-table">
+              <tr>
+                <th>appointment_id</th>
+                <th>patient_id</th>
+                <th>doctor_id</th>
+                <th>app_date</th>
+                <th>app_time</th>
+                <th>status</th>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>2026-01-28</td>
+                <td>10:30:00</td>
+                <td><span class="status-pending">pending</span></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>3</td>
+                <td>1</td>
+                <td>2026-01-29</td>
+                <td>09:15:00</td>
+                <td><span class="status-completed">completed</span></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>1</td>
+                <td>2</td>
+                <td>2026-01-30</td>
+                <td>11:30:00</td>
+                <td><span class="status-pending">pending</span></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- UPDATE -->
+        <div class="tab-content" id="tab-update">
+          <div class="code-block-wrapper">
+            <div class="code-header">
+              <div class="dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+              </div>
+              <span class="code-filename">update.sql</span>
+            </div>
+            <pre><code><span class="cm">-- Mark appointment 3 as completed</span>
+<span class="kw">UPDATE</span> <span class="dt">Appointment</span>
+<span class="kw">SET</span>    status = <span class="str">'completed'</span>
+<span class="kw">WHERE</span>  appointment_id = <span class="num">3</span>;
+
+<span class="cm">-- Update Dr. Priyantha's specialization</span>
+<span class="kw">UPDATE</span> <span class="dt">Doctor</span>
+<span class="kw">SET</span>    specialization = <span class="str">'Senior General Physician'</span>
+<span class="kw">WHERE</span>  doctor_id = <span class="num">2</span>;</code></pre>
+          </div>
+        </div>
+
+        <!-- DELETE -->
+        <div class="tab-content" id="tab-delete">
+          <div class="code-block-wrapper">
+            <div class="code-header">
+              <div class="dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+              </div>
+              <span class="code-filename">delete.sql</span>
+            </div>
+            <pre><code><span class="cm">-- Remove a single appointment</span>
+<span class="kw">DELETE FROM</span> <span class="dt">Appointment</span> <span class="kw">WHERE</span> appointment_id = <span class="num">2</span>;
+
+<span class="cm">-- Full patient removal (clean up related records first)</span>
+<span class="kw">DELETE FROM</span> <span class="dt">Patient_Allergy</span> <span class="kw">WHERE</span> patient_id = <span class="num">2</span>;
+<span class="kw">DELETE FROM</span> <span class="dt">TestTaken</span>       <span class="kw">WHERE</span> patient_id = <span class="num">2</span>;
+<span class="kw">DELETE FROM</span> <span class="dt">Appointment</span>     <span class="kw">WHERE</span> patient_id = <span class="num">2</span>;
+<span class="kw">DELETE FROM</span> <span class="dt">Patient</span>         <span class="kw">WHERE</span> patient_id = <span class="num">2</span>;</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- What I learned -->
+      <div class="card" style="margin-bottom: 16px">
+        <p class="section-label">Operations Covered</p>
+        <div class="ops-grid">
+          <div class="op-item">
+            <span class="op-icon">🏗️</span
+            ><span class="op-label">DDL — CREATE TABLE with constraints</span>
+          </div>
+          <div class="op-item">
+            <span class="op-icon">➕</span
+            ><span class="op-label">DML — INSERT records</span>
+          </div>
+          <div class="op-item">
+            <span class="op-icon">🔍</span
+            ><span class="op-label">SELECT with column filtering</span>
+          </div>
+          <div class="op-item">
+            <span class="op-icon">✏️</span
+            ><span class="op-label">UPDATE existing rows</span>
+          </div>
+          <div class="op-item">
+            <span class="op-icon">🗑️</span
+            ><span class="op-label">DELETE with FK awareness</span>
+          </div>
+          <div class="op-item">
+            <span class="op-icon">🔗</span
+            ><span class="op-label">Foreign Keys & CASCADE</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px">
+        <a href="../index.html" class="back-btn">← Back to Portfolio</a>
+      </div>
+    </main>
+
+    <script>
+      function showTab(name) {
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((el) => el.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((el) => el.classList.remove("active"));
+        document.getElementById("tab-" + name).classList.add("active");
+        event.target.classList.add("active");
+      }
+    </script>
+  </body>
+</html>
