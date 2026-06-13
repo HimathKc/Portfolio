@@ -3,127 +3,284 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="Portfolio of Himath Chandrasena — projects, skills, contact."
-    />
+    <meta name="description" content="Himath Chandrasena — CS & AI student at NIBM. Projects in Flask, MySQL, C++, and open source." />
+    <meta property="og:title" content="Himath Chandrasena — Developer Portfolio" />
+    <meta property="og:description" content="CS + AI student at NIBM. Projects: Study Bloom, Smart Library, Hospital DB, Loan Calculator, and open-source PRs." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/og-preview.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
     <title>Himath Chandrasena — Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
     <link rel="stylesheet" href="lassn.css" />
   </head>
-  <body>
+  <body data-backend="auto">
+    <div class="cursor-glow" aria-hidden="true"></div>
+    <div id="toastRoot" class="toast-root" aria-live="polite" aria-atomic="true"></div>
     <a class="skip-link" href="#main">Skip to content</a>
 
-    <header class="site-header">
-      <div class="container">
-        <h1>Himath Chandrasena</h1>
-        <nav aria-label="Social links">
-          <a
-            href="https://www.facebook.com/himath.chandrasena/"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Facebook</a
-          >
-          <a
-            href="https://github.com/HimathKc"
-            target="_blank"
-            rel="noopener noreferrer"
-            >GitHub</a
-          >
-          <a
-            href="https://www.instagram.com/wtf_himath/"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Instagram</a
-          >
-          <a href="resume.html" class="btn">Resume</a>
+    <header class="site-header glass-nav">
+      <div class="container nav-wrap">
+        <a class="brand" href="#top" aria-label="Go to homepage">
+          <span class="brand-mark"><span class="mark-code">H</span></span>
+          <span class="brand-name">Himath.dev</span>
+        </a>
+        <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+        <nav class="main-nav" aria-label="Main navigation">
+          <a href="#projects">Projects</a>
+          <a href="#github">Pulse</a>
+          <a href="#skills">Skills</a>
+          <a href="#journey">Journey</a>
+          <a href="./resume.html">Resume</a>
+          <a href="#contact" class="btn btn-small">Contact</a>
+          <button class="theme-toggle" type="button" aria-label="Switch to light mode">🌙</button>
         </nav>
       </div>
     </header>
 
-    <main id="main" class="container">
-      <section class="hero">
-        <h2>Student &amp; Aspiring Developer</h2>
+    <main id="main">
+      <section class="hero-section" id="top">
+        <div class="particle-field" aria-hidden="true"></div>
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">CS + AI Student · Flask · MySQL · C++</p>
+            <div class="live-badge"><span class="live-dot"></span> <span data-site="status">Currently building: better projects, cleaner GitHub commits</span></div>
+            <h1>I build practical software as a <span class="typewriter" data-roles="CS Student,Flask Dev,Open Source Contributor,AI Learner">CS Student</span>.</h1>
+            <p class="hero-text">
+              I’m Himath, a Computer Science and AI student at NIBM. I turn coursework into working projects: Flask apps, MySQL database designs, C++ console systems, and open-source pull requests.
+            </p>
+            <p class="opportunity-pill">🟢 <span data-site="availability">Open to internship opportunities, junior projects, and remote-friendly work</span></p>
+            <div class="hero-actions">
+              <a href="#projects" class="btn">See the work</a>
+              <a href="https://github.com/HimathKc" class="btn btn-ghost" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="./resume.html" class="btn btn-ghost">Resume</a>
+              <a href="/resume/download-resume" class="btn btn-ghost backend-link">Download Resume</a>
+            </div>
+            <div class="quick-stats" aria-label="Portfolio stats">
+              <div><strong>5+</strong><span>Real projects</span></div>
+              <div><strong>Daily</strong><span>PR practice</span></div>
+              <div><strong>2026</strong><span>Active build year</span></div>
+            </div>
+          </div>
+
+          <aside class="terminal-card hero-console" aria-label="Developer summary card">
+            <div class="hero-orbit" aria-hidden="true"></div>
+            <div class="terminal-top"><span></span><span></span><span></span><em>himath@portfolio</em></div>
+            <pre><code><span class="code-muted">const</span> himath = {
+  role: <span class="code-string">"CS + AI student"</span>,
+  stack: [<span class="code-string">"Flask"</span>, <span class="code-string">"MySQL"</span>, <span class="code-string">"C++"</span>],
+  status: <span class="code-string">"building daily"</span>,
+  next: <span class="code-string">"<span data-site="learning">DSA + cleaner projects</span>"</span>
+};</code></pre>
+            <div class="console-metrics" aria-label="Current developer metrics">
+              <span><strong>OSS</strong> rhythm</span>
+              <span><strong data-github="reposMini">--</strong> public repos</span>
+              <span><strong>AI</strong> track</span>
+            </div>
+            <div class="floating-chip chip-one">git push origin main</div>
+            <div class="floating-chip chip-two">tests passing ✓</div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="about" class="reveal container section-card about-grid">
+        <div>
+          <p class="section-kicker">About</p>
+          <h2>I’m not pretending to be senior. I’m building my way there.</h2>
+        </div>
         <p>
-          I'm learning programming and databases — I build small projects to
-          practice problem-solving and design.
+          I care about projects that actually run, not just screenshots. Right now I’m sharpening Python, Flask, MySQL, C++, Git/GitHub, and AI fundamentals by building small systems, cleaning them up, and documenting what I learn.
         </p>
       </section>
 
-      <section id="about" class="card">
-        <h3>About</h3>
-        <p>
-          Hi — I'm Himath. I enjoy building things with code, learning C++,
-          Python and database design.
-        </p>
+      <section class="reveal container proof-strip" aria-label="Proof points">
+        <article>
+          <span>01</span>
+          <strong>Built and deployed</strong>
+          <p>Study Bloom runs as a Flask + MySQL app with timer logic, analytics, admin edits, and mobile fixes.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <strong>Database thinking</strong>
+          <p>ER diagrams, normalized schemas, relationships, and CRUD flows for academic systems.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <strong>Open-source rhythm</strong>
+          <p>Small daily PR practice: read issues, test locally, push branches, and handle reviews.</p>
+        </article>
       </section>
 
-      <section id="skills" class="card">
-        <h3>Core Skills</h3>
-        <ul class="skills-list">
-          <li>Python (basics)</li>
-          <li>C++ (basics)</li>
-          <li>Relational Algebra</li>
-          <li>Database Design</li>
-          <li>HTML / CSS (basics)</li>
-        </ul>
+
+      <section id="github" class="container reveal dashboard-grid" aria-label="GitHub and current focus">
+        <article class="section-card github-card">
+          <div class="section-heading compact">
+            <div>
+              <p class="section-kicker">GitHub Pulse</p>
+              <h2>Live-ish stats from GitHub.</h2>
+            </div>
+            <a class="btn btn-small btn-ghost" href="https://github.com/HimathKc" target="_blank" rel="noopener noreferrer">Profile</a>
+          </div>
+          <div class="github-stats" id="githubStats">
+            <div><strong data-github="repos">--</strong><span>Public repos</span></div>
+            <div><strong data-github="followers">--</strong><span>Followers</span></div>
+            <div><strong data-github="stars">--</strong><span>Total stars</span></div>
+          </div>
+          <p class="muted-text github-note" id="githubNote">Fetching HimathKc stats...</p>
+        </article>
+
+        <article class="section-card vibe-card">
+          <p class="section-kicker">Now playing</p>
+          <h2>Current build vibe.</h2>
+          <div class="vibe-row"><span>🌱 Study Bloom polish</span><strong>82%</strong></div>
+          <div class="progress"><i style="--progress:82%"></i></div>
+          <div class="vibe-row"><span>🦈 Open-source PR rhythm</span><strong>Active</strong></div>
+          <div class="progress"><i style="--progress:74%"></i></div>
+          <p class="muted-text">Focus: cleaner commits, better project pages, DSA practice, and less “AI wrote this” portfolio energy.</p>
+        </article>
       </section>
 
-      <section id="projects" class="card">
-        <h3>Projects</h3>
-        <div class="projects-grid">
-          <article class="project">
-            <h4>Loan Repayment Calculator</h4>
-            <p>A basic C++ calculator created as a student project.</p>
-            <a
-              href="projects/loan.html"
-              class="project-link"
-              aria-label="View project: Loan Repayment Calculator"
-              >View project</a
-            >
+      <section id="projects" class="reveal container section-block">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Selected work</p>
+            <h2>Projects with actual logic behind them.</h2>
+          </div>
+          <div class="filter-row" aria-label="Project filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="cpp">C++</button>
+            <button class="filter-btn" data-filter="database">Database</button>
+            <button class="filter-btn" data-filter="web">Web</button>
+            <button class="filter-btn" data-filter="opensource">Open Source</button>
+          </div>
+        </div>
+
+        <div class="projects-grid" id="projectGrid">
+          <article class="project-card" data-category="web python mysql flask">
+            <div class="project-icon">🌱</div>
+            <p class="project-type">Personal Flask App</p>
+            <h3>Study Bloom</h3>
+            <p>Private study timer and planner app with persistent timer logic, streaks, counters, admin analytics, manual session edits, and mobile UX fixes.</p>
+            <ul class="project-points"><li>Fixed mobile timer reset issues</li><li>Deployed with Flask + MySQL</li></ul>
+            <div class="tag-row"><span>Python</span><span>Flask</span><span>MySQL</span><span>Railway</span></div>
+            <a class="project-link" href="https://github.com/HimathKc/study-bloom" target="_blank" rel="noopener noreferrer">GitHub Repo →</a>
+            <div class="project-preview"><strong>Quick preview</strong><p>Timer persistence, admin edits, counters, mobile bug fixes, and Railway deploy flow.</p><span>Open repo →</span></div>
           </article>
-          <article class="project">
-            <h4>Hospital Database Design</h4>
-            <p>Relational database design for a hospital management system.</p>
-            <a
-              href="projects/hospital.html"
-              class="project-link"
-              aria-label="View project: Hospital Database Design"
-              >View project</a
-            >
+
+          <article class="project-card" data-category="cpp database">
+            <div class="project-icon">📚</div>
+            <p class="project-type">Academic C++ Project</p>
+            <h3>Smart Library Management System</h3>
+            <p>C++ console system for books, members, borrow records, returns, reservations, and late-return fine tracking.</p>
+            <ul class="project-points"><li>Uses structs, arrays, and functions</li><li>Tracks availability and fine logic</li></ul>
+            <div class="tag-row"><span>C++</span><span>Arrays</span><span>Structs</span><span>Functions</span></div>
+            <a class="project-link" href="projects/SmartLibraryManagementsys.html">View Project →</a>
+            <div class="project-preview"><strong>Quick preview</strong><p>Book/member management, borrow-return flow, reservations, and fine tracking in C++.</p><span>See details →</span></div>
+          </article>
+
+          <article class="project-card" data-category="database mysql">
+            <div class="project-icon">🏥</div>
+            <p class="project-type">Database Design</p>
+            <h3>Hospital Management Database</h3>
+            <p>ER diagram and MySQL schema for patients, doctors, appointments, test types, and test records with clear relationships.</p>
+            <ul class="project-points"><li>Designed relational structure</li><li>Focused on practical hospital flows</li></ul>
+            <div class="tag-row"><span>MySQL</span><span>ERD</span><span>CRUD</span><span>Normalization</span></div>
+            <a class="project-link" href="projects/hospital.html">View Project →</a>
+            <div class="project-preview"><strong>Quick preview</strong><p>Patient, doctor, appointment, and test-record relationships mapped with MySQL thinking.</p><span>See schema →</span></div>
+          </article>
+
+          <article class="project-card" data-category="cpp">
+            <div class="project-icon">💸</div>
+            <p class="project-type">C++ Console App</p>
+            <h3>Loan Repayment Calculator</h3>
+            <p>Calculator that creates a repayment schedule, computes interest, and classifies loans using basic C++ logic.</p>
+            <ul class="project-points"><li>Practiced loops and calculations</li><li>Outputs readable repayment info</li></ul>
+            <div class="tag-row"><span>C++</span><span>Loops</span><span>I/O</span><span>Math</span></div>
+            <a class="project-link" href="projects/loan.html">View Project →</a>
+            <div class="project-preview"><strong>Quick preview</strong><p>Repayment schedule, interest calculations, and readable console output using C++ basics.</p><span>View app →</span></div>
+          </article>
+
+          <article class="project-card" data-category="opensource web js">
+            <div class="project-icon">🦈</div>
+            <p class="project-type">Open Source</p>
+            <h3>Fork Commit Merge PRs</h3>
+            <p>Beginner-friendly contribution practice across Flask and JavaScript tasks, with clean commits, local testing, and pull requests.</p>
+            <ul class="project-points"><li>Issue → branch → test → PR workflow</li><li>Daily consistency practice</li></ul>
+            <div class="tag-row"><span>Git</span><span>GitHub</span><span>PRs</span><span>Testing</span></div>
+            <a class="project-link" href="https://github.com/HimathKc" target="_blank" rel="noopener noreferrer">View GitHub →</a>
+            <div class="project-preview"><strong>Quick preview</strong><p>Daily PR rhythm: pick issue, branch cleanly, test locally, push, and handle reviews.</p><span>Profile →</span></div>
           </article>
         </div>
       </section>
 
-      <section id="contact" class="card">
-        <h3>Contact</h3>
-        <p>
-          Email:
-          <a href="Mailto:Himath.Chandrasena@gmail.com"
-            >Himath.Chandrasena@gmail.com</a
-          >
-        </p>
-        <p>
-          Or find me on
-          <a
-            href="https://github.com/HimathKc"
-            target="_blank"
-            rel="noopener noreferrer"
-            >GitHub</a
-          >.
-        </p>
+      <section id="skills" class="reveal container section-card">
+        <div class="section-heading compact">
+          <div>
+            <p class="section-kicker">Stack</p>
+            <h2>What I’m comfortable using right now.</h2>
+          </div>
+        </div>
+        <div class="skill-board">
+          <div class="skill-meter" data-level="72"><div class="skill-top"><span>Python / Flask</span><b>72%</b></div><p>Routes, templates, MySQL integration, deployment basics</p><div class="meter"><i></i></div></div>
+          <div class="skill-meter" data-level="76"><div class="skill-top"><span>C++ Logic</span><b>76%</b></div><p>Console apps, structs, arrays, functions, problem solving</p><div class="meter"><i></i></div></div>
+          <div class="skill-meter" data-level="80"><div class="skill-top"><span>MySQL Design</span><b>80%</b></div><p>ER diagrams, CRUD, normalization, relationships</p><div class="meter"><i></i></div></div>
+          <div class="skill-meter" data-level="65"><div class="skill-top"><span>Frontend</span><b>65%</b></div><p>HTML, CSS, JavaScript, responsive portfolio UI</p><div class="meter"><i></i></div></div>
+        </div>
+      </section>
+
+      <section id="learning" class="reveal container section-card learning-card">
+        <div>
+          <p class="section-kicker">Now learning</p>
+          <h2>The next version of me is mostly DSA, cleaner code, and stronger AI fundamentals.</h2>
+        </div>
+        <div class="learning-grid">
+          <article><strong>DSA</strong><p>Solving small problems to improve logic instead of memorizing patterns.</p></article>
+          <article><strong>Backend</strong><p>Writing cleaner Flask routes, database queries, migrations, and admin flows.</p></article>
+          <article><strong>AI basics</strong><p>Building the foundation: search algorithms, agents, ML concepts, and practical Python.</p></article>
+        </div>
+      </section>
+
+      <section id="journey" class="reveal container section-card timeline-card">
+        <p class="section-kicker">Journey</p>
+        <h2>How the build path is going.</h2>
+        <div class="timeline">
+          <div><span>2025</span><p>Completed foundation studies, built programming confidence with C++ and Python basics, and strengthened database fundamentals.</p></div>
+          <div><span>2026</span><p>Started Diploma in CS & AI, built Smart Library in C++, designed Hospital DB schemas, and cleaned project pages for portfolio use.</p></div>
+          <div><span>Now</span><p>Deployed Study Bloom with Flask/MySQL on Railway, improved mobile UX, and practice open-source PRs with Git/GitHub workflows.</p></div>
+        </div>
+      </section>
+
+      <section id="contact" class="reveal container section-card contact-card">
+        <div>
+          <p class="section-kicker">Contact</p>
+          <h2>Let’s connect.</h2>
+          <p class="email-line">Email: <a href="mailto:Himath.Chandrasena@gmail.com" id="emailAddress">Himath.Chandrasena@gmail.com</a> <button class="copy-email" type="button" data-copy="Himath.Chandrasena@gmail.com">Copy</button></p>
+        </div>
+        <div class="contact-links">
+          <a href="https://github.com/HimathKc" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/himath-chandrasena/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://www.instagram.com/wtf_himath/" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://www.facebook.com/himath.chandrasena/" target="_blank" rel="noopener noreferrer">Facebook</a>
+        </div>
+        <form class="contact-form" id="contactForm">
+          <input name="name" type="text" placeholder="Your name" autocomplete="name" required />
+          <input name="email" type="email" placeholder="Your email (optional)" autocomplete="email" />
+          <textarea name="message" placeholder="Message" required></textarea>
+          <button class="btn" type="submit">Send message</button>
+          <p class="contact-hint">This opens your email app with the message filled in. No backend storage and no upload endpoint.</p>
+        </form>
       </section>
     </main>
 
+    <button class="back-to-top" aria-label="Back to top">↑</button>
+
     <footer class="site-footer">
       <div class="container">
-        <small>&copy; 2026 Himath Chandrasena</small>
+        <small>&copy; 2026 Himath Chandrasena. Built with HTML, CSS and JavaScript.<span class="footer-meta">Last updated: June 2026 · Version 1.3</span></small>
       </div>
     </footer>
+    <script src="script.js"></script>
   </body>
 </html>
