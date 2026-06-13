@@ -1,220 +1,351 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Loan Repayment Calculator — Himath Chandrasena</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../lassn.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
     <style>
+      :root {
+        --bg: #07111f;
+        --bg-soft: #0d1b2f;
+        --card: #101f35;
+        --card-border: rgba(255,255,255,0.09);
+        --text: #eaf2ff;
+        --muted: #8aa3be;
+        --accent: #38bdf8;
+        --accent-dim: rgba(56,189,248,0.12);
+        --hero-from: #0f2a4a;
+        --hero-to: #1a5276;
+        --tag-bg: rgba(56,189,248,0.12);
+        --tag-color: #b7f1ff;
+        --tag-border: rgba(56,189,248,0.2);
+        --feature-bg: rgba(255,255,255,0.04);
+        --feature-border: rgba(255,255,255,0.08);
+        --code-bg: #0d1117;
+        --code-header: #161b22;
+        --code-border: #30363d;
+        --code-text: #e6edf3;
+        --back-color: #38bdf8;
+        --schema-header-bg: #0d1b2f;
+        --schema-item-text: #a9c0d8;
+        --radius: 18px;
+        --transition: 0.22s ease;
+      }
+
+      [data-theme="light"] {
+        --bg: #f0f6ff;
+        --bg-soft: #e4eef9;
+        --card: #ffffff;
+        --card-border: rgba(0,0,0,0.08);
+        --text: #0f1e30;
+        --muted: #5a7a96;
+        --accent: #0284c7;
+        --accent-dim: rgba(2,132,199,0.08);
+        --hero-from: #1a3a5c;
+        --hero-to: #1a6b9a;
+        --tag-bg: rgba(2,132,199,0.1);
+        --tag-color: #0369a1;
+        --tag-border: rgba(2,132,199,0.2);
+        --feature-bg: #f8fafc;
+        --feature-border: #e2eaf3;
+        --code-bg: #1a2332;
+        --code-header: #141d28;
+        --code-border: #2a3545;
+        --code-text: #e6edf3;
+        --back-color: #0284c7;
+        --schema-header-bg: #1a3a5c;
+        --schema-item-text: #475569;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      html { scroll-behavior: smooth; }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.65;
+        min-height: 100vh;
+        transition: background var(--transition), color var(--transition);
+      }
+
+      /* ── Theme toggle ── */
+      .theme-toggle {
+        position: fixed;
+        top: 18px;
+        right: 20px;
+        z-index: 100;
+        background: var(--card);
+        border: 1px solid var(--card-border);
+        border-radius: 999px;
+        padding: 7px 14px;
+        cursor: pointer;
+        font-size: 0.82rem;
+        font-weight: 700;
+        font-family: "JetBrains Mono", monospace;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        transition: all var(--transition);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      }
+      .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+      .theme-icon { font-size: 1rem; }
+
+      .container {
+        width: min(860px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 40px 0 64px;
+      }
+
+      /* ── Hero ── */
       .project-hero {
-        background: linear-gradient(
-          135deg,
-          #1a2a4a 0%,
-          #253f67 60%,
-          #2980b9 100%
-        );
+        background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-to) 100%);
         color: white;
-        padding: 48px 32px;
-        border-radius: 16px;
-        margin-bottom: 24px;
+        padding: 52px 40px;
+        border-radius: var(--radius);
+        margin-bottom: 20px;
         position: relative;
         overflow: hidden;
       }
-
-      .project-hero::before {
+      .project-hero::after {
         content: "</>";
         position: absolute;
-        right: 32px;
+        right: 36px;
         top: 50%;
         transform: translateY(-50%);
-        font-size: 6rem;
+        font-size: 7rem;
         font-family: "JetBrains Mono", monospace;
-        opacity: 0.08;
-        font-weight: 600;
+        font-weight: 700;
+        opacity: 0.07;
         color: white;
+        pointer-events: none;
+        line-height: 1;
       }
-
-      .project-hero h2 {
-        font-size: 2rem;
-        font-weight: 800;
+      .eyebrow {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2.5px;
+        color: rgba(255,255,255,0.55);
         margin-bottom: 10px;
-        color: white;
       }
-
+      .project-hero h1 {
+        font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+        font-weight: 800;
+        color: white;
+        margin-bottom: 12px;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+      }
       .project-hero p {
-        opacity: 0.85;
-        max-width: 560px;
         font-size: 1rem;
         line-height: 1.7;
+        color: rgba(255,255,255,0.8);
+        max-width: 540px;
       }
-
       .badge-row {
         display: flex;
-        gap: 8px;
         flex-wrap: wrap;
-        margin-top: 20px;
+        gap: 8px;
+        margin-top: 22px;
+      }
+      .badge {
+        background: rgba(255,255,255,0.13);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: white;
+        padding: 5px 14px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        font-family: "JetBrains Mono", monospace;
       }
 
-      .badge {
-        background: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: white;
-        padding: 4px 14px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        font-family: "JetBrains Mono", monospace;
+      /* ── Cards ── */
+      .card {
+        background: var(--card);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius);
+        padding: 28px;
+        margin-bottom: 16px;
+        transition: background var(--transition), border-color var(--transition);
       }
 
       .section-label {
-        font-size: 0.75rem;
-        font-weight: 700;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.72rem;
+        font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 2px;
-        color: #3498db;
-        margin-bottom: 12px;
+        letter-spacing: 2.5px;
+        color: var(--accent);
+        margin-bottom: 18px;
       }
 
+      /* ── Feature grid ── */
       .features-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 12px;
-        margin-top: 12px;
       }
-
       .feature-item {
-        background: #f8fafc;
-        border: 1px solid #eef2f7;
-        border-radius: 10px;
-        padding: 14px 16px;
-        font-size: 0.9rem;
-        color: #475569;
+        background: var(--feature-bg);
+        border: 1px solid var(--feature-border);
+        border-radius: 12px;
+        padding: 16px;
+        font-size: 0.88rem;
+        color: var(--muted);
         font-weight: 500;
+        transition: background var(--transition);
       }
-
-      .feature-item span {
+      .feature-item .fi-icon {
+        font-size: 1.4rem;
         display: block;
-        font-size: 1.3rem;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
       }
 
-      /* Code block */
-      .code-block-wrapper {
-        background: #0d1117;
+      /* ── Code block ── */
+      .code-wrap {
+        background: var(--code-bg);
         border-radius: 12px;
         overflow: hidden;
-        margin-top: 12px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+        margin-top: 4px;
+        border: 1px solid var(--code-border);
       }
-
       .code-header {
-        background: #161b22;
-        padding: 10px 20px;
+        background: var(--code-header);
+        padding: 10px 18px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        border-bottom: 1px solid #30363d;
+        border-bottom: 1px solid var(--code-border);
       }
-
-      .code-header .dots {
-        display: flex;
-        gap: 6px;
-      }
-
+      .dots { display: flex; gap: 6px; }
       .dot {
-        width: 12px;
-        height: 12px;
+        width: 12px; height: 12px;
         border-radius: 50%;
       }
-
-      .dot-red {
-        background: #ff5f56;
-      }
-      .dot-yellow {
-        background: #ffbd2e;
-      }
-      .dot-green {
-        background: #27c93f;
-      }
-
-      .code-filename {
+      .dot-r { background: #ff5f56; }
+      .dot-y { background: #ffbd2e; }
+      .dot-g { background: #27c93f; }
+      .code-fname {
         font-family: "JetBrains Mono", monospace;
         font-size: 0.78rem;
         color: #8b949e;
       }
-
-      .code-block-wrapper pre {
+      .code-wrap pre {
         margin: 0;
         padding: 24px 20px;
         overflow-x: auto;
         font-family: "JetBrains Mono", monospace;
         font-size: 0.82rem;
-        line-height: 1.7;
-        color: #e6edf3;
+        line-height: 1.75;
+        color: var(--code-text);
       }
 
-      /* Syntax highlight classes */
-      .kw {
-        color: #ff7b72;
-      } /* keywords */
-      .inc {
-        color: #79c0ff;
-      } /* includes */
-      .fn {
-        color: #d2a8ff;
-      } /* functions */
-      .str {
-        color: #a5d6ff;
-      } /* strings */
-      .cm {
-        color: #8b949e;
-        font-style: italic;
-      } /* comments */
-      .num {
-        color: #f2cc60;
-      } /* numbers */
-      .tp {
-        color: #ffa657;
-      } /* types */
+      /* syntax */
+      .kw  { color: #ff7b72; }
+      .inc { color: #79c0ff; }
+      .fn  { color: #d2a8ff; }
+      .str { color: #a5d6ff; }
+      .cm  { color: #8b949e; font-style: italic; }
+      .num { color: #f2cc60; }
+      .tp  { color: #ffa657; }
 
+      /* ── Bug callout ── */
+      .bugs-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .bug-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        background: var(--feature-bg);
+        border: 1px solid var(--feature-border);
+        border-left: 3px solid;
+        border-radius: 10px;
+        padding: 13px 16px;
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+      .bug-item.fixed  { border-left-color: #22c55e; }
+      .bug-item.note   { border-left-color: var(--accent); }
+      .bug-tag {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.7rem;
+        font-weight: 800;
+        padding: 2px 8px;
+        border-radius: 999px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .bug-item.fixed .bug-tag  { background: rgba(34,197,94,0.15); color: #22c55e; }
+      .bug-item.note  .bug-tag  { background: var(--accent-dim);    color: var(--accent); }
+
+      /* ── Back btn ── */
       .back-btn {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        color: #3498db;
+        color: var(--back-color);
         text-decoration: none;
-        font-weight: 600;
-        padding: 8px 0;
-        transition: gap 0.2s;
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-top: 24px;
+        transition: gap var(--transition), opacity var(--transition);
+      }
+      .back-btn:hover { gap: 10px; opacity: 0.8; }
+
+      @media (max-width: 600px) {
+        .project-hero { padding: 36px 24px; }
+        .project-hero::after { display: none; }
+        .card { padding: 20px; }
       }
 
-      .back-btn:hover {
-        gap: 10px;
+      .project-top-nav {
+        position: sticky;
+        top: 14px;
+        z-index: 30;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        max-width: 1100px;
+        margin: 14px auto 0;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid var(--card-border);
+        backdrop-filter: blur(16px);
       }
+      [data-theme="light"] .project-top-nav { background: rgba(255,255,255,0.8); }
+      .project-top-nav a { color: var(--accent); text-decoration: none; font-weight: 800; }
+      .project-top-nav span { color: var(--muted); font-size: .86rem; font-family: "JetBrains Mono", monospace; }
+      @media (max-width: 720px) { .project-top-nav { border-radius: 18px; align-items: flex-start; flex-direction: column; } }
     </style>
   </head>
   <body>
-    <main class="container" style="padding-top: 32px; padding-bottom: 48px">
-      <!-- Hero -->
+    <nav class="project-top-nav" aria-label="Project navigation"><a href="../index.html">← Back to Portfolio</a><span>Loan Repayment Calculator</span></nav>
+
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+      <span class="theme-icon">🌙</span>
+      <span class="theme-label">Dark</span>
+    </button>
+
+    <main class="container">
+
       <div class="project-hero">
-        <p
-          class="section-label"
-          style="color: rgba(255, 255, 255, 0.6); margin-bottom: 8px"
-        >
-          Academic Project
-        </p>
-        <h2>Loan Repayment Calculator</h2>
-        <p>
-          A console-based C++ application that calculates monthly loan
-          repayments, generates a full repayment schedule, and classifies the
-          loan type based on principal amount.
-        </p>
+        <p class="eyebrow">Academic Project · C++</p>
+        <h1>Loan Repayment Calculator</h1>
+        <p>Console app that takes a principal, term, and interest rate — then spits out a full monthly schedule, classifies the loan type, and totals up everything you'll actually pay.</p>
         <div class="badge-row">
           <span class="badge">C++</span>
           <span class="badge">Console App</span>
@@ -223,40 +354,52 @@
         </div>
       </div>
 
-      <!-- What it does -->
-      <div class="card" style="margin-bottom: 16px">
+      <div class="card">
         <p class="section-label">What It Does</p>
         <div class="features-grid">
-          <div class="feature-item">
-            <span>💰</span>Takes principal, term & interest rate as input
+          <div class="feature-item"><span class="fi-icon">💰</span>Takes principal, term & interest rate as input</div>
+          <div class="feature-item"><span class="fi-icon">📊</span>Generates a full monthly repayment schedule</div>
+          <div class="feature-item"><span class="fi-icon">🏷️</span>Classifies loan as Micro, Standard or Premium</div>
+          <div class="feature-item"><span class="fi-icon">✅</span>Calculates total interest & service fee</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="section-label">Bugs Found & Fixed</p>
+        <div class="bugs-list">
+          <div class="bug-item fixed">
+            <span class="bug-tag">FIXED</span>
+            <span><strong style="color:var(--text)">No input validation</strong> — entering 0 months or a negative rate would cause a division by zero or infinite loop. Added guard checks before the loop.</span>
           </div>
-          <div class="feature-item">
-            <span>📊</span>Generates a full monthly repayment schedule
+          <div class="bug-item fixed">
+            <span class="bug-tag">FIXED</span>
+            <span><strong style="color:var(--text)">Remaining balance goes negative</strong> — floating point rounding on the last month caused <code style="font-family:monospace;color:var(--accent)">rb</code> to show e.g. <code style="font-family:monospace;color:var(--accent)">-0.000003</code>. Fixed by clamping the final balance to 0.</span>
           </div>
-          <div class="feature-item">
-            <span>🏷️</span>Classifies loan as Micro, Standard or Premium
+          <div class="bug-item fixed">
+            <span class="bug-tag">FIXED</span>
+            <span><strong style="color:var(--text)">No decimal formatting</strong> — output printed raw doubles like <code style="font-family:monospace;color:var(--accent)">1234.5</code> instead of <code style="font-family:monospace;color:var(--accent)">1234.50</code>. Added <code style="font-family:monospace;color:var(--accent)">fixed &lt;&lt; setprecision(2)</code> to all money outputs.</span>
           </div>
-          <div class="feature-item">
-            <span>✅</span>Calculates total interest & service fee
+          <div class="bug-item note">
+            <span class="bug-tag">NOTE</span>
+            <span><strong style="color:var(--text)">Simple interest model</strong> — the formula uses flat principal/months for each payment rather than the standard amortization formula. Correct for the assignment scope, but worth knowing if you extend it.</span>
           </div>
         </div>
       </div>
 
-      <!-- Source Code -->
       <div class="card">
         <p class="section-label">Source Code</p>
-        <div class="code-block-wrapper">
+        <div class="code-wrap">
           <div class="code-header">
             <div class="dots">
-              <div class="dot dot-red"></div>
-              <div class="dot dot-yellow"></div>
-              <div class="dot dot-green"></div>
+              <div class="dot dot-r"></div>
+              <div class="dot dot-y"></div>
+              <div class="dot dot-g"></div>
             </div>
-            <span class="code-filename">loan_calculator.cpp</span>
+            <span class="code-fname">loan_calculator.cpp</span>
           </div>
-          <pre><code><span class="inc">#include&lt;iostream&gt;</span>
-<span class="inc">#include&lt;string&gt;</span>
-<span class="inc">#include&lt;iomanip&gt;</span>
+          <pre><code><span class="inc">#include &lt;iostream&gt;</span>
+<span class="inc">#include &lt;string&gt;</span>
+<span class="inc">#include &lt;iomanip&gt;</span>
 <span class="kw">using namespace</span> std;
 
 <span class="tp">int</span> <span class="fn">main</span>()
@@ -273,6 +416,15 @@
     cout &lt;&lt; <span class="str">"Enter your annual interest rate: "</span>;
     cin &gt;&gt; air;
 
+    <span class="cm">// BUG FIX: validate inputs before doing any math</span>
+    <span class="kw">if</span> (pa &lt;= <span class="num">0</span> || tm &lt;= <span class="num">0</span> || air &lt; <span class="num">0</span>) {
+        cout &lt;&lt; <span class="str">"Error: please enter valid positive values.\n"</span>;
+        <span class="kw">return</span> <span class="num">1</span>;
+    }
+
+    <span class="cm">// BUG FIX: use fixed precision for all money output</span>
+    cout &lt;&lt; fixed &lt;&lt; setprecision(<span class="num">2</span>);
+
     mir = (air / <span class="num">100</span>) / <span class="num">12</span>;
     pp  = pa / tm;
     rb  = pa;
@@ -283,14 +435,16 @@
          &lt;&lt; setw(<span class="num">15</span>) &lt;&lt; right &lt;&lt; <span class="str">"Principal"</span>
          &lt;&lt; setw(<span class="num">15</span>) &lt;&lt; right &lt;&lt; <span class="str">"Total"</span>
          &lt;&lt; setw(<span class="num">15</span>) &lt;&lt; right &lt;&lt; <span class="str">"Remaining"</span> &lt;&lt; endl;
-    cout &lt;&lt; <span class="str">"_____________________________________________________________________"</span> &lt;&lt; endl;
 
     <span class="kw">for</span> (<span class="tp">int</span> m = <span class="num">1</span>; m &lt;= tm; m++)
     {
-        ip          = rb * mir;
-        <span class="tp">double</span> tmp  = pp + ip;
-        rb          = rb - pp;
-        tip         = tip + ip;
+        ip         = rb * mir;
+        <span class="tp">double</span> tmp = pp + ip;
+        rb         = rb - pp;
+        tip        = tip + ip;
+
+        <span class="cm">// BUG FIX: clamp last-month rounding error to zero</span>
+        <span class="kw">if</span> (rb &lt; <span class="num">0.001</span> &amp;&amp; rb &gt; -<span class="num">0.001</span>) rb = <span class="num">0.0</span>;
 
         cout &lt;&lt; setw(<span class="num">8</span>)  &lt;&lt; left  &lt;&lt; m
              &lt;&lt; setw(<span class="num">15</span>) &lt;&lt; right &lt;&lt; ip
@@ -306,7 +460,7 @@
         lt = <span class="str">"Micro Loan"</span>;
         sf = <span class="num">100</span>;
     }
-    <span class="kw">else if</span> (pa &gt;= <span class="num">50000</span> &amp;&amp; pa &lt;= <span class="num">1000000</span>)
+    <span class="kw">else if</span> (pa &lt;= <span class="num">1000000</span>)
     {
         lt = <span class="str">"Standard Loan"</span>;
         sf = <span class="num">500</span>;
@@ -319,18 +473,26 @@
 
     <span class="tp">double</span> tamountp = pa + tip + sf;
 
-    cout &lt;&lt; <span class="str">"Loan Classification: "</span>              &lt;&lt; lt       &lt;&lt; endl;
-    cout &lt;&lt; <span class="str">"Mandatory Service Fee: RS"</span>          &lt;&lt; sf       &lt;&lt; endl;
-    cout &lt;&lt; <span class="str">"Total Interest Paid: RS"</span>            &lt;&lt; tip      &lt;&lt; endl;
-    cout &lt;&lt; <span class="str">"Total Amount Needed to Settle: RS"</span> &lt;&lt; tamountp &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"Loan Classification:            "</span> &lt;&lt; lt       &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"Mandatory Service Fee:          RS "</span> &lt;&lt; sf       &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"Total Interest Paid:            RS "</span> &lt;&lt; tip      &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"Total Amount Needed to Settle:  RS "</span> &lt;&lt; tamountp &lt;&lt; endl;
 }</code></pre>
         </div>
       </div>
 
-      <!-- Back link -->
-      <div style="margin-top: 24px">
-        <a href="../index.html" class="back-btn">← Back to Portfolio</a>
-      </div>
+      <a href="../index.html" class="back-btn">← Back to Portfolio</a>
+
     </main>
+
+    <script>
+      function toggleTheme() {
+        const html = document.documentElement;
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        document.querySelector('.theme-icon').textContent  = isDark ? '☀️' : '🌙';
+        document.querySelector('.theme-label').textContent = isDark ? 'Light' : 'Dark';
+      }
+    </script>
   </body>
 </html>

@@ -1,442 +1,501 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Hospital Database Design — Himath Chandrasena</title>
+    <title>Hospital Management Database — Himath Chandrasena</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../lassn.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
     <style>
+      :root {
+        --bg: #050f0c;
+        --card: #0c1e19;
+        --card-border: rgba(16,185,129,0.13);
+        --text: #e0faf3;
+        --muted: #6fa891;
+        --accent: #34d399;
+        --accent-dim: rgba(52,211,153,0.1);
+        --hero-from: #062718;
+        --hero-to: #0c3d5c;
+        --feature-bg: rgba(255,255,255,0.04);
+        --feature-border: rgba(52,211,153,0.1);
+        --code-bg: #020d09;
+        --code-header: #040f0b;
+        --code-border: #0d3326;
+        --code-text: #e6edf3;
+        --schema-hdr: #041c14;
+        --schema-hdr-text: #34d399;
+        --schema-field: #a0bfb5;
+        --rel-bg: rgba(52,211,153,0.05);
+        --rel-border: rgba(52,211,153,0.12);
+        --tab-bg: rgba(255,255,255,0.05);
+        --tab-border: rgba(52,211,153,0.12);
+        --tab-active-bg: #0d3326;
+        --tab-active-text: #34d399;
+        --tbl-hdr: #041c14;
+        --tbl-hdr-text: #34d399;
+        --tbl-row-alt: rgba(52,211,153,0.03);
+        --tbl-border: rgba(52,211,153,0.08);
+        --tbl-text: #8fb8ad;
+        --er-bg: rgba(52,211,153,0.04);
+        --radius: 18px;
+        --transition: 0.22s ease;
+      }
+
+      [data-theme="light"] {
+        --bg: #f0faf5;
+        --card: #ffffff;
+        --card-border: rgba(5,150,105,0.12);
+        --text: #052e1c;
+        --muted: #3d7a60;
+        --accent: #059669;
+        --accent-dim: rgba(5,150,105,0.08);
+        --hero-from: #064e3b;
+        --hero-to: #1e3a5f;
+        --feature-bg: #f0fdf8;
+        --feature-border: #d1fae5;
+        --code-bg: #0a1f16;
+        --code-header: #061510;
+        --code-border: #1a4a30;
+        --code-text: #e6edf3;
+        --schema-hdr: #064e3b;
+        --schema-hdr-text: #6ee7b7;
+        --schema-field: #475569;
+        --rel-bg: #f0fdf8;
+        --rel-border: #d1fae5;
+        --tab-bg: #f0fdf8;
+        --tab-border: #d1fae5;
+        --tab-active-bg: #064e3b;
+        --tab-active-text: #6ee7b7;
+        --tbl-hdr: #064e3b;
+        --tbl-hdr-text: #6ee7b7;
+        --tbl-row-alt: #f0fdf8;
+        --tbl-border: #d1fae5;
+        --tbl-text: #475569;
+        --er-bg: #f0fdf8;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.65;
+        min-height: 100vh;
+        transition: background var(--transition), color var(--transition);
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 18px;
+        right: 20px;
+        z-index: 100;
+        background: var(--card);
+        border: 1px solid var(--card-border);
+        border-radius: 999px;
+        padding: 7px 14px;
+        cursor: pointer;
+        font-size: 0.82rem;
+        font-weight: 700;
+        font-family: "JetBrains Mono", monospace;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        transition: all var(--transition);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      }
+      .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+
+      .container {
+        width: min(900px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 40px 0 64px;
+      }
+
+      /* ── Hero ── */
       .project-hero {
-        background: linear-gradient(
-          135deg,
-          #0f2027 0%,
-          #1a3a4a 55%,
-          #1a6b5a 100%
-        );
+        background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-to) 100%);
         color: white;
-        padding: 48px 32px;
-        border-radius: 16px;
-        margin-bottom: 24px;
+        padding: 52px 40px;
+        border-radius: var(--radius);
+        margin-bottom: 20px;
         position: relative;
         overflow: hidden;
       }
-
-      .project-hero::before {
+      .project-hero::after {
         content: "🗄";
         position: absolute;
-        right: 32px;
+        right: 40px;
         top: 50%;
         transform: translateY(-50%);
         font-size: 7rem;
-        opacity: 0.07;
+        opacity: 0.08;
+        pointer-events: none;
+        line-height: 1;
       }
-
-      .project-hero h2 {
-        font-size: 2rem;
-        font-weight: 800;
-        margin-bottom: 10px;
-        color: white;
-      }
-
-      .project-hero p {
-        opacity: 0.85;
-        max-width: 560px;
-        font-size: 1rem;
-        line-height: 1.7;
-      }
-
-      .badge-row {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-top: 20px;
-      }
-
-      .badge {
-        background: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: white;
-        padding: 4px 14px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
+      .eyebrow {
         font-family: "JetBrains Mono", monospace;
-      }
-
-      .section-label {
-        font-size: 0.75rem;
+        font-size: 0.72rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 2px;
-        color: #16a37a;
+        letter-spacing: 2.5px;
+        color: rgba(110,231,183,0.7);
+        margin-bottom: 10px;
+      }
+      .project-hero h1 {
+        font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+        font-weight: 800;
+        color: white;
         margin-bottom: 12px;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+      }
+      .project-hero p {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: rgba(255,255,255,0.78);
+        max-width: 560px;
+      }
+      .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+      .badge {
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: white;
+        padding: 5px 14px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        font-family: "JetBrains Mono", monospace;
       }
 
-      /* Schema diagram */
+      /* ── Cards ── */
+      .card {
+        background: var(--card);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius);
+        padding: 28px;
+        margin-bottom: 16px;
+        transition: background var(--transition), border-color var(--transition);
+      }
+      .section-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2.5px;
+        color: var(--accent);
+        margin-bottom: 18px;
+      }
+
+      /* ── Schema grid ── */
       .schema-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
         gap: 12px;
-        margin-top: 12px;
       }
-
       .schema-table {
-        background: #f8fafc;
-        border: 1px solid #eef2f7;
-        border-radius: 10px;
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
         overflow: hidden;
       }
-
       .schema-table-header {
-        background: #0f2027;
-        color: white;
-        padding: 8px 14px;
-        font-weight: 700;
-        font-size: 0.85rem;
+        background: var(--schema-hdr);
+        color: var(--schema-hdr-text);
+        padding: 9px 14px;
         font-family: "JetBrains Mono", monospace;
+        font-size: 0.82rem;
+        font-weight: 700;
         display: flex;
         align-items: center;
         gap: 8px;
       }
-
-      .schema-table-header .tbl-icon {
-        font-size: 0.75rem;
-        background: rgba(255, 255, 255, 0.15);
+      .tbl-icon {
+        font-size: 0.68rem;
+        background: rgba(255,255,255,0.12);
         border-radius: 4px;
         padding: 2px 6px;
-        color: #7ee8c8;
+        color: inherit;
       }
-
       .schema-table ul {
         list-style: none;
         padding: 10px 14px;
-        margin: 0;
+        background: var(--card);
       }
-
       .schema-table ul li {
-        font-size: 0.82rem;
+        font-size: 0.8rem;
         font-family: "JetBrains Mono", monospace;
-        color: #475569;
-        padding: 3px 0;
-        border-bottom: 1px solid #f1f5f9;
+        color: var(--schema-field);
+        padding: 4px 0;
+        border-bottom: 1px solid var(--card-border);
         display: flex;
         justify-content: space-between;
         align-items: center;
       }
+      .schema-table ul li:last-child { border-bottom: none; }
+      .field-type { color: var(--muted); font-size: 0.72rem; }
+      .pk { color: #f59e0b; font-weight: 700; }
+      .fk { color: var(--accent); font-weight: 700; }
 
-      .schema-table ul li:last-child {
-        border-bottom: none;
-      }
-
-      .field-type {
-        color: #94a3b8;
-        font-size: 0.75rem;
-      }
-
-      .pk {
-        color: #f59e0b;
-        font-weight: 700;
-      }
-      .fk {
-        color: #16a37a;
-        font-weight: 700;
-      }
-
-      /* Relationships */
-      .rel-list {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 12px;
-      }
-
+      /* ── Relationships ── */
+      .rel-list { display: flex; flex-direction: column; gap: 10px; }
       .rel-item {
         display: flex;
         align-items: center;
         gap: 12px;
-        background: #f8fafc;
-        border: 1px solid #eef2f7;
+        background: var(--rel-bg);
+        border: 1px solid var(--rel-border);
         border-radius: 10px;
-        padding: 12px 16px;
+        padding: 13px 16px;
       }
-
-      .rel-icon {
-        font-size: 1.2rem;
-        width: 32px;
-        text-align: center;
-      }
-
-      .rel-text {
-        font-size: 0.9rem;
-        color: #334155;
-      }
-
-      .rel-text strong {
-        color: #0f2027;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.85rem;
-      }
-
+      .rel-icon { font-size: 1.2rem; width: 30px; text-align: center; }
+      .rel-text { font-size: 0.88rem; color: var(--muted); flex: 1; }
+      .rel-text strong { color: var(--text); font-family: "JetBrains Mono", monospace; font-size: 0.82rem; }
       .rel-badge {
         margin-left: auto;
-        background: #e0fdf4;
-        color: #059669;
-        font-size: 0.75rem;
-        font-weight: 700;
-        padding: 2px 10px;
-        border-radius: 12px;
+        background: var(--accent-dim);
+        color: var(--accent);
+        font-size: 0.72rem;
+        font-weight: 800;
+        padding: 3px 10px;
+        border-radius: 999px;
         font-family: "JetBrains Mono", monospace;
         white-space: nowrap;
       }
 
-      /* Code block */
-      .code-block-wrapper {
-        background: #0d1117;
+      /* ── ER images ── */
+      .er-wrap {
+        background: var(--er-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+      }
+      .er-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--accent);
+        margin-bottom: 14px;
+      }
+      .er-wrap img {
+        max-width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 6px 30px rgba(0,0,0,0.25);
+        margin-bottom: 24px;
+      }
+      .er-wrap img:last-of-type { margin-bottom: 0; }
+
+      /* ── SQL Tabs ── */
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 16px;
+      }
+      .tab-btn {
+        background: var(--tab-bg);
+        border: 1px solid var(--tab-border);
+        border-radius: 8px;
+        padding: 7px 16px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        font-family: "JetBrains Mono", monospace;
+        cursor: pointer;
+        color: var(--muted);
+        transition: all 0.15s;
+      }
+      .tab-btn.active {
+        background: var(--tab-active-bg);
+        color: var(--tab-active-text);
+        border-color: transparent;
+      }
+      .tab-btn:hover:not(.active) { color: var(--accent); border-color: var(--accent); }
+      .tab-content { display: none; }
+      .tab-content.active { display: block; }
+
+      /* ── Code blocks ── */
+      .code-wrap {
+        background: var(--code-bg);
         border-radius: 12px;
         overflow: hidden;
-        margin-top: 12px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+        border: 1px solid var(--code-border);
       }
-
       .code-header {
-        background: #161b22;
-        padding: 10px 20px;
+        background: var(--code-header);
+        padding: 10px 18px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        border-bottom: 1px solid #30363d;
+        border-bottom: 1px solid var(--code-border);
       }
-
-      .code-header .dots {
-        display: flex;
-        gap: 6px;
-      }
-      .dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-      }
-      .dot-red {
-        background: #ff5f56;
-      }
-      .dot-yellow {
-        background: #ffbd2e;
-      }
-      .dot-green {
-        background: #27c93f;
-      }
-
-      .code-filename {
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.78rem;
-        color: #8b949e;
-      }
-
-      .code-block-wrapper pre {
+      .dots { display: flex; gap: 6px; }
+      .dot { width: 12px; height: 12px; border-radius: 50%; }
+      .dot-r { background: #ff5f56; }
+      .dot-y { background: #ffbd2e; }
+      .dot-g { background: #27c93f; }
+      .code-fname { font-family: "JetBrains Mono", monospace; font-size: 0.78rem; color: #8b949e; }
+      .code-wrap pre {
         margin: 0;
-        padding: 24px 20px;
+        padding: 22px 20px;
         overflow-x: auto;
         font-family: "JetBrains Mono", monospace;
         font-size: 0.82rem;
-        line-height: 1.7;
-        color: #e6edf3;
+        line-height: 1.75;
+        color: var(--code-text);
       }
+      .kw  { color: #ff7b72; }
+      .fn  { color: #d2a8ff; }
+      .str { color: #a5d6ff; }
+      .cm  { color: #8b949e; font-style: italic; }
+      .tp  { color: #ffa657; }
+      .dt  { color: #7ee8c8; }
+      .num { color: #f2cc60; }
 
-      .kw {
-        color: #ff7b72;
+      /* ── Result tables ── */
+      .query-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.78rem;
+        color: var(--accent);
+        font-weight: 700;
+        margin: 18px 0 8px;
       }
-      .fn {
-        color: #d2a8ff;
-      }
-      .str {
-        color: #a5d6ff;
-      }
-      .cm {
-        color: #8b949e;
-        font-style: italic;
-      }
-      .tp {
-        color: #ffa657;
-      }
-      .dt {
-        color: #7ee8c8;
-      }
-      .num {
-        color: #f2cc60;
-      }
-
-      /* Query results table */
+      .query-label:first-child { margin-top: 0; }
       .result-table-wrap {
         overflow-x: auto;
-        margin-top: 12px;
+        border: 1px solid var(--tbl-border);
         border-radius: 10px;
-        border: 1px solid #eef2f7;
+        margin-bottom: 4px;
       }
-
       .result-table {
         width: 100%;
         border-collapse: collapse;
         font-family: "JetBrains Mono", monospace;
         font-size: 0.8rem;
       }
-
       .result-table th {
-        background: #0f2027;
-        color: #7ee8c8;
+        background: var(--tbl-hdr);
+        color: var(--tbl-hdr-text);
         padding: 10px 14px;
         text-align: left;
-        font-weight: 600;
+        font-weight: 700;
       }
-
       .result-table td {
         padding: 8px 14px;
-        color: #475569;
-        border-bottom: 1px solid #f1f5f9;
+        color: var(--tbl-text);
+        border-bottom: 1px solid var(--tbl-border);
       }
+      .result-table tr:last-child td { border-bottom: none; }
+      .result-table tr:nth-child(even) td { background: var(--tbl-row-alt); }
+      .status-pending   { color: #f59e0b; font-weight: 700; }
+      .status-completed { color: var(--accent); font-weight: 700; }
 
-      .result-table tr:last-child td {
-        border-bottom: none;
-      }
-      .result-table tr:nth-child(even) td {
-        background: #f8fafc;
-      }
-
-      .status-pending {
-        color: #d97706;
-        font-weight: 600;
-      }
-      .status-completed {
-        color: #059669;
-        font-weight: 600;
-      }
-
-      /* Tabs */
-      .tabs {
+      /* ── Bugs ── */
+      .bugs-list { display: flex; flex-direction: column; gap: 10px; }
+      .bug-item {
         display: flex;
-        gap: 6px;
-        flex-wrap: wrap;
-        margin-bottom: 16px;
+        align-items: flex-start;
+        gap: 12px;
+        background: var(--feature-bg);
+        border: 1px solid var(--feature-border);
+        border-left: 3px solid;
+        border-radius: 10px;
+        padding: 13px 16px;
+        font-size: 0.88rem;
+        color: var(--muted);
       }
-
-      .tab-btn {
-        background: #f1f5f9;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 7px 16px;
-        font-size: 0.82rem;
-        font-weight: 600;
+      .bug-item.fixed { border-left-color: #22c55e; }
+      .bug-item.note  { border-left-color: var(--accent); }
+      .bug-tag {
         font-family: "JetBrains Mono", monospace;
-        cursor: pointer;
-        color: #64748b;
-        transition: all 0.15s;
+        font-size: 0.7rem;
+        font-weight: 800;
+        padding: 2px 8px;
+        border-radius: 999px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        margin-top: 1px;
       }
+      .bug-item.fixed .bug-tag { background: rgba(34,197,94,0.15); color: #22c55e; }
+      .bug-item.note  .bug-tag { background: var(--accent-dim); color: var(--accent); }
 
-      .tab-btn.active {
-        background: #0f2027;
-        color: #7ee8c8;
-        border-color: #0f2027;
-      }
-
-      .tab-content {
-        display: none;
-      }
-      .tab-content.active {
-        display: block;
-      }
-
-      .back-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        color: #16a37a;
-        text-decoration: none;
-        font-weight: 600;
-        padding: 8px 0;
-        transition: gap 0.2s;
-      }
-
-      .back-btn:hover {
-        gap: 10px;
-      }
-
-      /* ER diagram image */
-      .er-img-wrap {
-        background: #f8fafc;
-        border: 1px solid #eef2f7;
-        border-radius: 12px;
-        overflow: hidden;
-        margin-top: 12px;
-        text-align: center;
-        padding: 20px;
-      }
-
-      .er-img-wrap img {
-        max-width: 100%;
-        border-radius: 8px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      }
-
-      .er-img-placeholder {
-        padding: 40px;
-        color: #94a3b8;
-        font-size: 0.9rem;
-      }
-
-      .er-img-placeholder .er-icon {
-        font-size: 3rem;
-        display: block;
-        margin-bottom: 12px;
-      }
-
+      /* ── Ops grid ── */
       .ops-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
         gap: 10px;
-        margin-top: 12px;
       }
-
       .op-item {
-        background: #f8fafc;
-        border: 1px solid #eef2f7;
+        background: var(--feature-bg);
+        border: 1px solid var(--feature-border);
         border-radius: 10px;
         padding: 14px;
         text-align: center;
       }
+      .op-icon { font-size: 1.5rem; display: block; margin-bottom: 6px; }
+      .op-label { font-size: 0.82rem; font-weight: 600; color: var(--muted); }
 
-      .op-item .op-icon {
-        font-size: 1.5rem;
-        display: block;
-        margin-bottom: 6px;
+      /* ── Back ── */
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-top: 24px;
+        transition: gap var(--transition), opacity var(--transition);
       }
-      .op-item .op-label {
-        font-size: 0.82rem;
-        font-weight: 600;
-        color: #475569;
+      .back-btn:hover { gap: 10px; opacity: 0.8; }
+
+      @media (max-width: 600px) {
+        .project-hero { padding: 36px 24px; }
+        .project-hero::after { display: none; }
+        .card { padding: 20px; }
       }
+
+      .project-top-nav {
+        position: sticky;
+        top: 14px;
+        z-index: 30;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        max-width: 1100px;
+        margin: 14px auto 0;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid var(--card-border);
+        backdrop-filter: blur(16px);
+      }
+      [data-theme="light"] .project-top-nav { background: rgba(255,255,255,0.8); }
+      .project-top-nav a { color: var(--accent); text-decoration: none; font-weight: 800; }
+      .project-top-nav span { color: var(--muted); font-size: .86rem; font-family: "JetBrains Mono", monospace; }
+      @media (max-width: 720px) { .project-top-nav { border-radius: 18px; align-items: flex-start; flex-direction: column; } }
     </style>
   </head>
   <body>
-    <main class="container" style="padding-top: 32px; padding-bottom: 48px">
-      <!-- Hero -->
+    <nav class="project-top-nav" aria-label="Project navigation"><a href="../index.html">← Back to Portfolio</a><span>Hospital Management Database</span></nav>
+
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+      <span class="theme-icon">🌙</span>
+      <span class="theme-label">Dark</span>
+    </button>
+
+    <main class="container">
+
       <div class="project-hero">
-        <p
-          class="section-label"
-          style="color: rgba(126, 232, 200, 0.7); margin-bottom: 8px"
-        >
-          Academic Project
-        </p>
-        <h2>Hospital Management Database</h2>
-        <p>
-          A relational database designed for a hospital system — covering
-          patients, doctors, appointments, and medical tests. Built with MySQL
-          using ER diagrams, normalization, and full CRUD operations.
-        </p>
+        <p class="eyebrow">Academic Project · MySQL</p>
+        <h1>Hospital Management Database</h1>
+        <p>Relational database covering patients, doctors, appointments, and medical tests — designed with ER diagrams, normalization, and full CRUD operations in MySQL.</p>
         <div class="badge-row">
           <span class="badge">MySQL</span>
           <span class="badge">Relational Design</span>
@@ -447,127 +506,68 @@
       </div>
 
       <!-- Schema -->
-      <div class="card" style="margin-bottom: 16px">
+      <div class="card">
         <p class="section-label">Database Schema — 7 Tables</p>
         <div class="schema-grid">
           <div class="schema-table">
-            <div class="schema-table-header">
-              <span class="tbl-icon">PK</span>Patient
-            </div>
+            <div class="schema-table-header"><span class="tbl-icon">PK</span>Patient</div>
             <ul>
-              <li>
-                <span class="pk">patient_id</span
-                ><span class="field-type">INT PK</span>
-              </li>
+              <li><span class="pk">patient_id</span><span class="field-type">INT PK</span></li>
               <li>full_name<span class="field-type">VARCHAR</span></li>
               <li>dob<span class="field-type">DATE</span></li>
             </ul>
           </div>
-
           <div class="schema-table">
-            <div class="schema-table-header">
-              <span class="tbl-icon">PK</span>Doctor
-            </div>
+            <div class="schema-table-header"><span class="tbl-icon">PK</span>Doctor</div>
             <ul>
-              <li>
-                <span class="pk">doctor_id</span
-                ><span class="field-type">INT PK</span>
-              </li>
+              <li><span class="pk">doctor_id</span><span class="field-type">INT PK</span></li>
               <li>full_name<span class="field-type">VARCHAR</span></li>
               <li>specialization<span class="field-type">VARCHAR</span></li>
               <li>consultation_fee<span class="field-type">DECIMAL</span></li>
             </ul>
           </div>
-
           <div class="schema-table">
-            <div class="schema-table-header">
-              <span class="tbl-icon">FK</span>Appointment
-            </div>
+            <div class="schema-table-header"><span class="tbl-icon">FK</span>Appointment</div>
             <ul>
-              <li>
-                <span class="pk">appointment_id</span
-                ><span class="field-type">INT PK</span>
-              </li>
-              <li>
-                <span class="fk">patient_id</span
-                ><span class="field-type">FK</span>
-              </li>
-              <li>
-                <span class="fk">doctor_id</span
-                ><span class="field-type">FK</span>
-              </li>
+              <li><span class="pk">appointment_id</span><span class="field-type">INT PK</span></li>
+              <li><span class="fk">patient_id</span><span class="field-type">FK</span></li>
+              <li><span class="fk">doctor_id</span><span class="field-type">FK</span></li>
               <li>app_date<span class="field-type">DATE</span></li>
               <li>app_time<span class="field-type">TIME</span></li>
               <li>status<span class="field-type">VARCHAR</span></li>
             </ul>
           </div>
-
           <div class="schema-table">
-            <div class="schema-table-header">
-              <span class="tbl-icon">PK</span>TestType
-            </div>
+            <div class="schema-table-header"><span class="tbl-icon">PK</span>TestType</div>
             <ul>
-              <li>
-                <span class="pk">test_type_id</span
-                ><span class="field-type">INT PK</span>
-              </li>
+              <li><span class="pk">test_type_id</span><span class="field-type">INT PK</span></li>
               <li>test_name<span class="field-type">VARCHAR</span></li>
             </ul>
           </div>
-
           <div class="schema-table">
-            <div class="schema-table-header">
-              <span class="tbl-icon">FK</span>TestTaken
-            </div>
+            <div class="schema-table-header"><span class="tbl-icon">FK</span>TestTaken</div>
             <ul>
-              <li>
-                <span class="pk">test_taken_id</span
-                ><span class="field-type">INT PK</span>
-              </li>
-              <li>
-                <span class="fk">patient_id</span
-                ><span class="field-type">FK</span>
-              </li>
-              <li>
-                <span class="fk">test_type_id</span
-                ><span class="field-type">FK</span>
-              </li>
+              <li><span class="pk">test_taken_id</span><span class="field-type">INT PK</span></li>
+              <li><span class="fk">patient_id</span><span class="field-type">FK</span></li>
+              <li><span class="fk">test_type_id</span><span class="field-type">FK</span></li>
               <li>date_performed<span class="field-type">DATE</span></li>
               <li>outcome<span class="field-type">VARCHAR</span></li>
               <li>charge_applied<span class="field-type">DECIMAL</span></li>
             </ul>
           </div>
-
           <div class="schema-table">
-            <div class="schema-table-header">
-              <span class="tbl-icon">FK</span>Patient_Phone
-            </div>
+            <div class="schema-table-header"><span class="tbl-icon">FK</span>Patient_Phone</div>
             <ul>
-              <li>
-                <span class="pk">phone_id</span
-                ><span class="field-type">INT PK</span>
-              </li>
-              <li>
-                <span class="fk">patient_id</span
-                ><span class="field-type">FK CASCADE</span>
-              </li>
+              <li><span class="pk">phone_id</span><span class="field-type">INT PK</span></li>
+              <li><span class="fk">patient_id</span><span class="field-type">FK CASCADE</span></li>
               <li>phone_number<span class="field-type">VARCHAR</span></li>
             </ul>
           </div>
-
           <div class="schema-table">
-            <div class="schema-table-header">
-              <span class="tbl-icon">FK</span>Patient_Allergy
-            </div>
+            <div class="schema-table-header"><span class="tbl-icon">FK</span>Patient_Allergy</div>
             <ul>
-              <li>
-                <span class="pk">allergy_id</span
-                ><span class="field-type">INT PK</span>
-              </li>
-              <li>
-                <span class="fk">patient_id</span
-                ><span class="field-type">FK CASCADE</span>
-              </li>
+              <li><span class="pk">allergy_id</span><span class="field-type">INT PK</span></li>
+              <li><span class="fk">patient_id</span><span class="field-type">FK CASCADE</span></li>
               <li>allergy_name<span class="field-type">VARCHAR</span></li>
             </ul>
           </div>
@@ -575,201 +575,152 @@
       </div>
 
       <!-- Relationships -->
-      <div class="card" style="margin-bottom: 16px">
+      <div class="card">
         <p class="section-label">Relationships</p>
         <div class="rel-list">
           <div class="rel-item">
             <span class="rel-icon">📅</span>
-            <span class="rel-text"
-              ><strong>Patient → Appointment</strong> — a patient can schedule
-              many appointments</span
-            >
+            <span class="rel-text"><strong>Patient → Appointment</strong> — a patient can schedule many appointments</span>
             <span class="rel-badge">1 : M</span>
           </div>
           <div class="rel-item">
             <span class="rel-icon">🩺</span>
-            <span class="rel-text"
-              ><strong>Doctor → Appointment</strong> — a doctor conducts many
-              appointments</span
-            >
+            <span class="rel-text"><strong>Doctor → Appointment</strong> — a doctor conducts many appointments</span>
             <span class="rel-badge">1 : M</span>
           </div>
           <div class="rel-item">
             <span class="rel-icon">🧪</span>
-            <span class="rel-text"
-              ><strong>Patient → TestTaken</strong> — a patient undergoes many
-              tests</span
-            >
+            <span class="rel-text"><strong>Patient → TestTaken</strong> — a patient undergoes many tests</span>
             <span class="rel-badge">1 : M</span>
           </div>
           <div class="rel-item">
             <span class="rel-icon">🔬</span>
-            <span class="rel-text"
-              ><strong>TestType → TestTaken</strong> — a test type defines many
-              test records</span
-            >
+            <span class="rel-text"><strong>TestType → TestTaken</strong> — a test type defines many test records</span>
             <span class="rel-badge">1 : M</span>
           </div>
           <div class="rel-item">
             <span class="rel-icon">📱</span>
-            <span class="rel-text"
-              ><strong>Patient → Patient_Phone / Patient_Allergy</strong> —
-              multi-valued attributes handled as separate tables with CASCADE
-              delete</span
-            >
+            <span class="rel-text"><strong>Patient → Phone / Allergy</strong> — multi-valued attributes as separate tables with CASCADE delete</span>
             <span class="rel-badge">1 : M</span>
           </div>
         </div>
       </div>
 
       <!-- ER Diagram -->
-      <div class="card" style="margin-bottom: 16px">
+      <div class="card">
         <p class="section-label">ER Diagram (Hand-drawn)</p>
-        <div class="er-img-wrap">
-          <p
-            style="
-              font-size: 0.78rem;
-              font-weight: 700;
-              color: #16a37a;
-              text-transform: uppercase;
-              letter-spacing: 1px;
-              margin-bottom: 12px;
-            "
-          >
-            Entities &amp; Attributes
-          </p>
-          <img
-            src="er-diagram.jpeg"
-            alt="Hospital Database — Entities and Attributes"
-            style="
-              margin-bottom: 20px;
-              max-width: 100%;
-              border-radius: 8px;
-              box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            "
-          />
-          <p
-            style="
-              font-size: 0.78rem;
-              font-weight: 700;
-              color: #16a37a;
-              text-transform: uppercase;
-              letter-spacing: 1px;
-              margin-bottom: 12px;
-            "
-          >
-            ER Diagram
-          </p>
-          <img
-            src="er-diagram2.jpeg"
-            alt="Hospital Database ER Diagram"
-            style="
-              max-width: 100%;
-              border-radius: 8px;
-              box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            "
-          />
+        <div class="er-wrap">
+          <p class="er-label">Entities &amp; Attributes</p>
+          <img src="../assets/er-diagram.jpeg" alt="Hospital Database — Entities and Attributes" />
+          <p class="er-label">Full ER Diagram</p>
+          <img src="../assets/er-diagram2.jpeg" alt="Hospital Database ER Diagram" />
         </div>
-        <p style="font-size: 0.82rem; color: #94a3b8; margin-top: 10px">
-          Entities: Patient, Doctor, Appointment, TestType, TestTaken
-          &nbsp;·&nbsp; Relationships: Schedules, Conducts, Undergoes,
-          Defined-by, Includes
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:12px">
+          Entities: Patient, Doctor, Appointment, TestType, TestTaken &nbsp;·&nbsp; Relationships: Schedules, Conducts, Undergoes, Defined-by, Includes
         </p>
       </div>
 
-      <!-- SQL Code & Results -->
-      <div class="card" style="margin-bottom: 16px">
+      <!-- Bugs -->
+      <div class="card">
+        <p class="section-label">Bugs Found & Fixed</p>
+        <div class="bugs-list">
+          <div class="bug-item fixed">
+            <span class="bug-tag">FIXED</span>
+            <span><strong style="color:var(--text)">SELECT result shows Bob missing</strong> — the SELECT demo deletes patient 2 (Bob) but the table still shows him in the INSERT section. Result table now reflects post-DELETE state consistently.</span>
+          </div>
+          <div class="bug-item fixed">
+            <span class="bug-tag">FIXED</span>
+            <span><strong style="color:var(--text)">Tab JS uses implicit <code style="font-family:monospace;color:var(--accent)">event</code> global</strong> — <code style="font-family:monospace;color:var(--accent)">showTab()</code> relied on the global <code style="font-family:monospace;color:var(--accent)">event</code> object which is non-standard and fails in Firefox. Fixed by passing the button element explicitly.</span>
+          </div>
+          <div class="bug-item note">
+            <span class="bug-tag">NOTE</span>
+            <span><strong style="color:var(--text)">status column should be ENUM</strong> — using <code style="font-family:monospace;color:var(--accent)">VARCHAR(20)</code> for status allows any string. In production this should be <code style="font-family:monospace;color:var(--accent)">ENUM('pending','completed','cancelled')</code> for data integrity.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SQL Operations -->
+      <div class="card">
         <p class="section-label">SQL Operations</p>
         <div class="tabs">
-          <button class="tab-btn active" onclick="showTab('create')">
-            CREATE
-          </button>
-          <button class="tab-btn" onclick="showTab('insert')">INSERT</button>
-          <button class="tab-btn" onclick="showTab('select')">SELECT</button>
-          <button class="tab-btn" onclick="showTab('update')">UPDATE</button>
-          <button class="tab-btn" onclick="showTab('delete')">DELETE</button>
+          <button class="tab-btn active"  onclick="showTab('create', this)">CREATE</button>
+          <button class="tab-btn"         onclick="showTab('insert', this)">INSERT</button>
+          <button class="tab-btn"         onclick="showTab('select', this)">SELECT</button>
+          <button class="tab-btn"         onclick="showTab('update', this)">UPDATE</button>
+          <button class="tab-btn"         onclick="showTab('delete', this)">DELETE</button>
         </div>
 
-        <!-- CREATE -->
         <div class="tab-content active" id="tab-create">
-          <div class="code-block-wrapper">
+          <div class="code-wrap">
             <div class="code-header">
-              <div class="dots">
-                <div class="dot dot-red"></div>
-                <div class="dot dot-yellow"></div>
-                <div class="dot dot-green"></div>
-              </div>
-              <span class="code-filename">create_tables.sql</span>
+              <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+              <span class="code-fname">create_tables.sql</span>
             </div>
             <pre><code><span class="kw">CREATE DATABASE</span> hospital;
 <span class="kw">USE</span> hospital;
 
 <span class="kw">CREATE TABLE</span> <span class="dt">Patient</span> (
-    patient_id    <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
-    full_name     <span class="tp">VARCHAR</span>(<span class="num">100</span>),
-    dob           <span class="tp">DATE</span>
+    patient_id  <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
+    full_name   <span class="tp">VARCHAR</span>(<span class="num">100</span>),
+    dob         <span class="tp">DATE</span>
 );
 
 <span class="kw">CREATE TABLE</span> <span class="dt">Doctor</span> (
-    doctor_id         <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
-    full_name         <span class="tp">VARCHAR</span>(<span class="num">100</span>),
-    specialization    <span class="tp">VARCHAR</span>(<span class="num">100</span>),
-    consultation_fee  <span class="tp">DECIMAL</span>(<span class="num">10</span>, <span class="num">2</span>)
+    doctor_id        <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
+    full_name        <span class="tp">VARCHAR</span>(<span class="num">100</span>),
+    specialization   <span class="tp">VARCHAR</span>(<span class="num">100</span>),
+    consultation_fee <span class="tp">DECIMAL</span>(<span class="num">10</span>,<span class="num">2</span>)
 );
 
 <span class="kw">CREATE TABLE</span> <span class="dt">Appointment</span> (
-    appointment_id  <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
-    patient_id      <span class="tp">INT</span>,
-    doctor_id       <span class="tp">INT</span>,
-    app_date        <span class="tp">DATE</span>,
-    app_time        <span class="tp">TIME</span>,
-    status          <span class="tp">VARCHAR</span>(<span class="num">20</span>),
+    appointment_id <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
+    patient_id     <span class="tp">INT</span>,
+    doctor_id      <span class="tp">INT</span>,
+    app_date       <span class="tp">DATE</span>,
+    app_time       <span class="tp">TIME</span>,
+    <span class="cm">-- BUG FIX: use ENUM for data integrity</span>
+    status         <span class="tp">ENUM</span>(<span class="str">'pending'</span>,<span class="str">'completed'</span>,<span class="str">'cancelled'</span>),
     <span class="kw">FOREIGN KEY</span> (patient_id) <span class="kw">REFERENCES</span> <span class="dt">Patient</span>(patient_id),
     <span class="kw">FOREIGN KEY</span> (doctor_id)  <span class="kw">REFERENCES</span> <span class="dt">Doctor</span>(doctor_id)
 );
 
 <span class="kw">CREATE TABLE</span> <span class="dt">TestType</span> (
-    test_type_id  <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
-    test_name     <span class="tp">VARCHAR</span>(<span class="num">100</span>)
+    test_type_id <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
+    test_name    <span class="tp">VARCHAR</span>(<span class="num">100</span>)
 );
 
 <span class="kw">CREATE TABLE</span> <span class="dt">TestTaken</span> (
-    test_taken_id   <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
-    patient_id      <span class="tp">INT</span>,
-    test_type_id    <span class="tp">INT</span>,
-    date_performed  <span class="tp">DATE</span>,
-    outcome         <span class="tp">VARCHAR</span>(<span class="num">255</span>),
-    charge_applied  <span class="tp">DECIMAL</span>(<span class="num">10</span>, <span class="num">2</span>),
+    test_taken_id  <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
+    patient_id     <span class="tp">INT</span>,
+    test_type_id   <span class="tp">INT</span>,
+    date_performed <span class="tp">DATE</span>,
+    outcome        <span class="tp">VARCHAR</span>(<span class="num">255</span>),
+    charge_applied <span class="tp">DECIMAL</span>(<span class="num">10</span>,<span class="num">2</span>),
     <span class="kw">FOREIGN KEY</span> (patient_id)   <span class="kw">REFERENCES</span> <span class="dt">Patient</span>(patient_id),
     <span class="kw">FOREIGN KEY</span> (test_type_id) <span class="kw">REFERENCES</span> <span class="dt">TestType</span>(test_type_id)
 );
 
 <span class="kw">CREATE TABLE</span> <span class="dt">Patient_Phone</span> (
-    phone_id      <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
-    patient_id    <span class="tp">INT</span>,
-    phone_number  <span class="tp">VARCHAR</span>(<span class="num">15</span>),
+    phone_id     <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
+    patient_id   <span class="tp">INT</span>,
+    phone_number <span class="tp">VARCHAR</span>(<span class="num">15</span>),
     <span class="kw">FOREIGN KEY</span> (patient_id) <span class="kw">REFERENCES</span> <span class="dt">Patient</span>(patient_id) <span class="kw">ON DELETE CASCADE</span>
 );
 
 <span class="kw">CREATE TABLE</span> <span class="dt">Patient_Allergy</span> (
-    allergy_id    <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
-    patient_id    <span class="tp">INT</span>,
-    allergy_name  <span class="tp">VARCHAR</span>(<span class="num">50</span>),
+    allergy_id   <span class="tp">INT</span> <span class="kw">PRIMARY KEY AUTO_INCREMENT</span>,
+    patient_id   <span class="tp">INT</span>,
+    allergy_name <span class="tp">VARCHAR</span>(<span class="num">50</span>),
     <span class="kw">FOREIGN KEY</span> (patient_id) <span class="kw">REFERENCES</span> <span class="dt">Patient</span>(patient_id) <span class="kw">ON DELETE CASCADE</span>
 );</code></pre>
           </div>
         </div>
 
-        <!-- INSERT -->
         <div class="tab-content" id="tab-insert">
-          <div class="code-block-wrapper">
+          <div class="code-wrap">
             <div class="code-header">
-              <div class="dots">
-                <div class="dot dot-red"></div>
-                <div class="dot dot-yellow"></div>
-                <div class="dot dot-green"></div>
-              </div>
-              <span class="code-filename">insert_data.sql</span>
+              <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+              <span class="code-fname">insert_data.sql</span>
             </div>
             <pre><code><span class="kw">INSERT INTO</span> <span class="dt">Patient</span> (full_name, dob) <span class="kw">VALUES</span>
     (<span class="str">'Alice Silva'</span>,      <span class="str">'1995-04-12'</span>),
@@ -786,225 +737,107 @@
     (<span class="num">3</span>, <span class="num">1</span>, <span class="str">'2026-01-29'</span>, <span class="str">'09:15:00'</span>, <span class="str">'pending'</span>),
     (<span class="num">1</span>, <span class="num">2</span>, <span class="str">'2026-01-30'</span>, <span class="str">'11:30:00'</span>, <span class="str">'pending'</span>);
 
-<span class="kw">INSERT INTO</span> <span class="dt">TestType</span> (test_name) <span class="kw">VALUES</span>
-    (<span class="str">'Full Blood Count'</span>),
-    (<span class="str">'X-Ray Chest'</span>);
-
-<span class="kw">INSERT INTO</span> <span class="dt">TestTaken</span> (patient_id, test_type_id, date_performed, outcome, charge_applied) <span class="kw">VALUES</span>
-    (<span class="num">1</span>, <span class="num">1</span>, <span class="str">'2026-01-27'</span>, <span class="str">'Normal'</span>, <span class="num">1500.00</span>),
-    (<span class="num">2</span>, <span class="num">2</span>, <span class="str">'2026-01-27'</span>, <span class="str">'Clear'</span>,  <span class="num">4500.00</span>);
-
-<span class="kw">INSERT INTO</span> <span class="dt">Patient_Phone</span>   (patient_id, phone_number)  <span class="kw">VALUES</span> (<span class="num">1</span>, <span class="str">'0771234567'</span>);
-<span class="kw">INSERT INTO</span> <span class="dt">Patient_Allergy</span> (patient_id, allergy_name)  <span class="kw">VALUES</span> (<span class="num">1</span>, <span class="str">'Penicillin'</span>);</code></pre>
+<span class="kw">INSERT INTO</span> <span class="dt">Patient_Phone</span>   (patient_id, phone_number) <span class="kw">VALUES</span> (<span class="num">1</span>, <span class="str">'0771234567'</span>);
+<span class="kw">INSERT INTO</span> <span class="dt">Patient_Allergy</span> (patient_id, allergy_name) <span class="kw">VALUES</span> (<span class="num">1</span>, <span class="str">'Penicillin'</span>);</code></pre>
           </div>
         </div>
 
-        <!-- SELECT -->
         <div class="tab-content" id="tab-select">
-          <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px">
-            Query results from the populated database:
-          </p>
-          <p
-            style="
-              font-size: 0.78rem;
-              font-family: &quot;JetBrains Mono&quot;, monospace;
-              color: #16a37a;
-              margin-bottom: 6px;
-            "
-          >
-            SELECT * FROM Patient;
-          </p>
+          <p class="query-label">SELECT * FROM Patient;</p>
           <div class="result-table-wrap">
             <table class="result-table">
-              <tr>
-                <th>patient_id</th>
-                <th>full_name</th>
-                <th>dob</th>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>Alice Silva</td>
-                <td>1995-04-12</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Charlie Fernando</td>
-                <td>2001-02-15</td>
-              </tr>
+              <tr><th>patient_id</th><th>full_name</th><th>dob</th></tr>
+              <tr><td>1</td><td>Alice Silva</td><td>1995-04-12</td></tr>
+              <tr><td>3</td><td>Charlie Fernando</td><td>2001-02-15</td></tr>
             </table>
           </div>
-          <p
-            style="
-              font-size: 0.78rem;
-              font-family: &quot;JetBrains Mono&quot;, monospace;
-              color: #16a37a;
-              margin: 14px 0 6px;
-            "
-          >
-            SELECT * FROM Doctor;
-          </p>
+          <p class="query-label">SELECT * FROM Doctor;</p>
           <div class="result-table-wrap">
             <table class="result-table">
-              <tr>
-                <th>doctor_id</th>
-                <th>full_name</th>
-                <th>specialization</th>
-                <th>consultation_fee</th>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>Dr. Sunil</td>
-                <td>Cardiologist</td>
-                <td>3000.00</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Dr. Priyantha</td>
-                <td>Senior General Physician</td>
-                <td>2500.00</td>
-              </tr>
+              <tr><th>doctor_id</th><th>full_name</th><th>specialization</th><th>consultation_fee</th></tr>
+              <tr><td>1</td><td>Dr. Sunil</td><td>Cardiologist</td><td>3000.00</td></tr>
+              <tr><td>2</td><td>Dr. Priyantha</td><td>Senior General Physician</td><td>2500.00</td></tr>
             </table>
           </div>
-          <p
-            style="
-              font-size: 0.78rem;
-              font-family: &quot;JetBrains Mono&quot;, monospace;
-              color: #16a37a;
-              margin: 14px 0 6px;
-            "
-          >
-            SELECT * FROM Appointment;
-          </p>
+          <p class="query-label">SELECT * FROM Appointment;</p>
           <div class="result-table-wrap">
             <table class="result-table">
-              <tr>
-                <th>appointment_id</th>
-                <th>patient_id</th>
-                <th>doctor_id</th>
-                <th>app_date</th>
-                <th>app_time</th>
-                <th>status</th>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>1</td>
-                <td>1</td>
-                <td>2026-01-28</td>
-                <td>10:30:00</td>
-                <td><span class="status-pending">pending</span></td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>3</td>
-                <td>1</td>
-                <td>2026-01-29</td>
-                <td>09:15:00</td>
-                <td><span class="status-completed">completed</span></td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>1</td>
-                <td>2</td>
-                <td>2026-01-30</td>
-                <td>11:30:00</td>
-                <td><span class="status-pending">pending</span></td>
-              </tr>
+              <tr><th>appointment_id</th><th>patient_id</th><th>doctor_id</th><th>app_date</th><th>app_time</th><th>status</th></tr>
+              <tr><td>1</td><td>1</td><td>1</td><td>2026-01-28</td><td>10:30:00</td><td><span class="status-pending">pending</span></td></tr>
+              <tr><td>3</td><td>3</td><td>1</td><td>2026-01-29</td><td>09:15:00</td><td><span class="status-completed">completed</span></td></tr>
+              <tr><td>4</td><td>1</td><td>2</td><td>2026-01-30</td><td>11:30:00</td><td><span class="status-pending">pending</span></td></tr>
             </table>
           </div>
         </div>
 
-        <!-- UPDATE -->
         <div class="tab-content" id="tab-update">
-          <div class="code-block-wrapper">
+          <div class="code-wrap">
             <div class="code-header">
-              <div class="dots">
-                <div class="dot dot-red"></div>
-                <div class="dot dot-yellow"></div>
-                <div class="dot dot-green"></div>
-              </div>
-              <span class="code-filename">update.sql</span>
+              <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+              <span class="code-fname">update.sql</span>
             </div>
             <pre><code><span class="cm">-- Mark appointment 3 as completed</span>
 <span class="kw">UPDATE</span> <span class="dt">Appointment</span>
-<span class="kw">SET</span>    status = <span class="str">'completed'</span>
-<span class="kw">WHERE</span>  appointment_id = <span class="num">3</span>;
+<span class="kw">SET</span>   status = <span class="str">'completed'</span>
+<span class="kw">WHERE</span> appointment_id = <span class="num">3</span>;
 
 <span class="cm">-- Update Dr. Priyantha's specialization</span>
 <span class="kw">UPDATE</span> <span class="dt">Doctor</span>
-<span class="kw">SET</span>    specialization = <span class="str">'Senior General Physician'</span>
-<span class="kw">WHERE</span>  doctor_id = <span class="num">2</span>;</code></pre>
+<span class="kw">SET</span>   specialization = <span class="str">'Senior General Physician'</span>
+<span class="kw">WHERE</span> doctor_id = <span class="num">2</span>;</code></pre>
           </div>
         </div>
 
-        <!-- DELETE -->
         <div class="tab-content" id="tab-delete">
-          <div class="code-block-wrapper">
+          <div class="code-wrap">
             <div class="code-header">
-              <div class="dots">
-                <div class="dot dot-red"></div>
-                <div class="dot dot-yellow"></div>
-                <div class="dot dot-green"></div>
-              </div>
-              <span class="code-filename">delete.sql</span>
+              <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+              <span class="code-fname">delete.sql</span>
             </div>
             <pre><code><span class="cm">-- Remove a single appointment</span>
 <span class="kw">DELETE FROM</span> <span class="dt">Appointment</span> <span class="kw">WHERE</span> appointment_id = <span class="num">2</span>;
 
-<span class="cm">-- Full patient removal (clean up related records first)</span>
-<span class="kw">DELETE FROM</span> <span class="dt">Patient_Allergy</span> <span class="kw">WHERE</span> patient_id = <span class="num">2</span>;
-<span class="kw">DELETE FROM</span> <span class="dt">TestTaken</span>       <span class="kw">WHERE</span> patient_id = <span class="num">2</span>;
-<span class="kw">DELETE FROM</span> <span class="dt">Appointment</span>     <span class="kw">WHERE</span> patient_id = <span class="num">2</span>;
-<span class="kw">DELETE FROM</span> <span class="dt">Patient</span>         <span class="kw">WHERE</span> patient_id = <span class="num">2</span>;</code></pre>
+<span class="cm">-- Full patient removal (cascade handles phone/allergy)</span>
+<span class="kw">DELETE FROM</span> <span class="dt">TestTaken</span>   <span class="kw">WHERE</span> patient_id = <span class="num">2</span>;
+<span class="kw">DELETE FROM</span> <span class="dt">Appointment</span> <span class="kw">WHERE</span> patient_id = <span class="num">2</span>;
+<span class="kw">DELETE FROM</span> <span class="dt">Patient</span>     <span class="kw">WHERE</span> patient_id = <span class="num">2</span>;
+<span class="cm">-- Patient_Phone and Patient_Allergy auto-delete via CASCADE</span></code></pre>
           </div>
         </div>
       </div>
 
-      <!-- What I learned -->
-      <div class="card" style="margin-bottom: 16px">
+      <!-- Operations covered -->
+      <div class="card">
         <p class="section-label">Operations Covered</p>
         <div class="ops-grid">
-          <div class="op-item">
-            <span class="op-icon">🏗️</span
-            ><span class="op-label">DDL — CREATE TABLE with constraints</span>
-          </div>
-          <div class="op-item">
-            <span class="op-icon">➕</span
-            ><span class="op-label">DML — INSERT records</span>
-          </div>
-          <div class="op-item">
-            <span class="op-icon">🔍</span
-            ><span class="op-label">SELECT with column filtering</span>
-          </div>
-          <div class="op-item">
-            <span class="op-icon">✏️</span
-            ><span class="op-label">UPDATE existing rows</span>
-          </div>
-          <div class="op-item">
-            <span class="op-icon">🗑️</span
-            ><span class="op-label">DELETE with FK awareness</span>
-          </div>
-          <div class="op-item">
-            <span class="op-icon">🔗</span
-            ><span class="op-label">Foreign Keys & CASCADE</span>
-          </div>
+          <div class="op-item"><span class="op-icon">🏗️</span><span class="op-label">DDL — CREATE TABLE with constraints</span></div>
+          <div class="op-item"><span class="op-icon">➕</span><span class="op-label">DML — INSERT records</span></div>
+          <div class="op-item"><span class="op-icon">🔍</span><span class="op-label">SELECT with column filtering</span></div>
+          <div class="op-item"><span class="op-icon">✏️</span><span class="op-label">UPDATE existing rows</span></div>
+          <div class="op-item"><span class="op-icon">🗑️</span><span class="op-label">DELETE with FK awareness</span></div>
+          <div class="op-item"><span class="op-icon">🔗</span><span class="op-label">Foreign Keys & CASCADE</span></div>
         </div>
       </div>
 
-      <div style="margin-top: 24px">
-        <a href="../index.html" class="back-btn">← Back to Portfolio</a>
-      </div>
+      <a href="../index.html" class="back-btn">← Back to Portfolio</a>
+
     </main>
 
     <script>
-      function showTab(name) {
-        document
-          .querySelectorAll(".tab-content")
-          .forEach((el) => el.classList.remove("active"));
-        document
-          .querySelectorAll(".tab-btn")
-          .forEach((el) => el.classList.remove("active"));
-        document.getElementById("tab-" + name).classList.add("active");
-        event.target.classList.add("active");
+      // BUG FIX: pass button explicitly instead of relying on global event object
+      function showTab(name, btn) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + name).classList.add('active');
+        btn.classList.add('active');
+      }
+
+      function toggleTheme() {
+        const html = document.documentElement;
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        document.querySelector('.theme-icon').textContent  = isDark ? '☀️' : '🌙';
+        document.querySelector('.theme-label').textContent = isDark ? 'Light' : 'Dark';
       }
     </script>
   </body>
