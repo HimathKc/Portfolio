@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Smart Library Management System — Himath Chandrasena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #0d0a1a;
+        --bg-soft: #130f25;
+        --card: #1a1530;
+        --card-border: rgba(139,92,246,0.15);
+        --text: #ede9ff;
+        --muted: #9585b8;
+        --accent: #a78bfa;
+        --accent-dim: rgba(167,139,250,0.12);
+        --hero-from: #1e0a3c;
+        --hero-to: #0c4a6e;
+        --tag-bg: rgba(167,139,250,0.12);
+        --tag-color: #c4b5fd;
+        --feature-bg: rgba(255,255,255,0.04);
+        --feature-border: rgba(139,92,246,0.12);
+        --code-bg: #0d1117;
+        --code-header: #0a0d14;
+        --code-border: #2d2060;
+        --code-text: #e6edf3;
+        --flow-bg: rgba(167,139,250,0.07);
+        --flow-border: rgba(139,92,246,0.2);
+        --radius: 18px;
+        --transition: 0.22s ease;
+      }
+
+      [data-theme="light"] {
+        --bg: #f5f0ff;
+        --bg-soft: #ede8ff;
+        --card: #ffffff;
+        --card-border: rgba(109,40,217,0.1);
+        --text: #1e0a3c;
+        --muted: #6d4a9c;
+        --accent: #7c3aed;
+        --accent-dim: rgba(124,58,237,0.08);
+        --hero-from: #2e0668;
+        --hero-to: #0369a1;
+        --tag-bg: rgba(124,58,237,0.1);
+        --tag-color: #6d28d9;
+        --feature-bg: #f9f7ff;
+        --feature-border: #e9e3ff;
+        --code-bg: #1a0f2e;
+        --code-header: #130a22;
+        --code-border: #3b1f6e;
+        --code-text: #e6edf3;
+        --flow-bg: rgba(124,58,237,0.06);
+        --flow-border: rgba(124,58,237,0.18);
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.65;
+        min-height: 100vh;
+        transition: background var(--transition), color var(--transition);
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 18px;
+        right: 20px;
+        z-index: 100;
+        background: var(--card);
+        border: 1px solid var(--card-border);
+        border-radius: 999px;
+        padding: 7px 14px;
+        cursor: pointer;
+        font-size: 0.82rem;
+        font-weight: 700;
+        font-family: "JetBrains Mono", monospace;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        transition: all var(--transition);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      }
+      .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+
+      .container {
+        width: min(860px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 40px 0 64px;
+      }
+
+      /* ── Hero ── */
+      .project-hero {
+        background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-to) 100%);
+        color: white;
+        padding: 52px 40px;
+        border-radius: var(--radius);
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+      .project-hero::after {
+        content: "📚";
+        position: absolute;
+        right: 40px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 7rem;
+        opacity: 0.1;
+        pointer-events: none;
+        line-height: 1;
+      }
+      .eyebrow {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2.5px;
+        color: rgba(255,255,255,0.5);
+        margin-bottom: 10px;
+      }
+      .project-hero h1 {
+        font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+        font-weight: 800;
+        color: white;
+        margin-bottom: 12px;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+      }
+      .project-hero p {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: rgba(255,255,255,0.78);
+        max-width: 560px;
+      }
+      .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+      .badge {
+        background: rgba(255,255,255,0.13);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: white;
+        padding: 5px 14px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      /* ── Cards ── */
+      .card {
+        background: var(--card);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius);
+        padding: 28px;
+        margin-bottom: 16px;
+        transition: background var(--transition), border-color var(--transition);
+      }
+      .section-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2.5px;
+        color: var(--accent);
+        margin-bottom: 18px;
+      }
+
+      /* ── Features ── */
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+      }
+      .feature-item {
+        background: var(--feature-bg);
+        border: 1px solid var(--feature-border);
+        border-radius: 12px;
+        padding: 16px;
+        font-size: 0.88rem;
+        color: var(--muted);
+        font-weight: 500;
+      }
+      .feature-item .fi-icon { font-size: 1.4rem; display: block; margin-bottom: 8px; }
+
+      /* ── Flow ── */
+      .flow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+      .flow-step {
+        background: var(--flow-bg);
+        border: 1px solid var(--flow-border);
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: var(--text);
+        white-space: nowrap;
+      }
+      .flow-arrow {
+        color: var(--accent);
+        font-size: 1rem;
+        opacity: 0.6;
+      }
+
+      /* ── Code ── */
+      .code-wrap {
+        background: var(--code-bg);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--code-border);
+      }
+      .code-header {
+        background: var(--code-header);
+        padding: 10px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--code-border);
+      }
+      .dots { display: flex; gap: 6px; }
+      .dot { width: 12px; height: 12px; border-radius: 50%; }
+      .dot-r { background: #ff5f56; }
+      .dot-y { background: #ffbd2e; }
+      .dot-g { background: #27c93f; }
+      .code-fname {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.78rem;
+        color: #8b949e;
+      }
+      .code-wrap pre {
+        margin: 0;
+        padding: 24px 20px;
+        overflow-x: auto;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.82rem;
+        line-height: 1.75;
+        color: var(--code-text);
+      }
+      .kw  { color: #ff7b72; }
+      .tp  { color: #ffa657; }
+      .str { color: #a5d6ff; }
+      .cm  { color: #8b949e; font-style: italic; }
+      .num { color: #f2cc60; }
+      .fn  { color: #d2a8ff; }
+
+      /* ── Bugs ── */
+      .bugs-list { display: flex; flex-direction: column; gap: 10px; }
+      .bug-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        background: var(--feature-bg);
+        border: 1px solid var(--feature-border);
+        border-left: 3px solid;
+        border-radius: 10px;
+        padding: 13px 16px;
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+      .bug-item.fixed { border-left-color: #22c55e; }
+      .bug-item.warn  { border-left-color: #f59e0b; }
+      .bug-tag {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.7rem;
+        font-weight: 800;
+        padding: 2px 8px;
+        border-radius: 999px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .bug-item.fixed .bug-tag { background: rgba(34,197,94,0.15); color: #22c55e; }
+      .bug-item.warn  .bug-tag { background: rgba(245,158,11,0.15); color: #f59e0b; }
+
+      /* ── Back ── */
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-top: 24px;
+        transition: gap var(--transition), opacity var(--transition);
+      }
+      .back-btn:hover { gap: 10px; opacity: 0.8; }
+
+      @media (max-width: 600px) {
+        .project-hero { padding: 36px 24px; }
+        .project-hero::after { display: none; }
+        .card { padding: 20px; }
+        .flow { flex-direction: column; align-items: flex-start; }
+        .flow-arrow { transform: rotate(90deg); }
+      }
+
+      .project-top-nav {
+        position: sticky;
+        top: 14px;
+        z-index: 30;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        max-width: 1100px;
+        margin: 14px auto 0;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid var(--card-border);
+        backdrop-filter: blur(16px);
+      }
+      [data-theme="light"] .project-top-nav { background: rgba(255,255,255,0.8); }
+      .project-top-nav a { color: var(--accent); text-decoration: none; font-weight: 800; }
+      .project-top-nav span { color: var(--muted); font-size: .86rem; font-family: "JetBrains Mono", monospace; }
+      @media (max-width: 720px) { .project-top-nav { border-radius: 18px; align-items: flex-start; flex-direction: column; } }
+    </style>
+  </head>
+  <body>
+    <nav class="project-top-nav" aria-label="Project navigation"><a href="../index.html">← Back to Portfolio</a><span>Smart Library Management System</span></nav>
+
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+      <span class="theme-icon">🌙</span>
+      <span class="theme-label">Dark</span>
+    </button>
+
+    <main class="container">
+
+      <div class="project-hero">
+        <p class="eyebrow">Academic C++ Project</p>
+        <h1>Smart Library Management System</h1>
+        <p>Console app for managing books, members, borrow records, returns, late fines, and reservations — all through a menu-driven interface built in C++.</p>
+        <div class="badge-row">
+          <span class="badge">C++</span>
+          <span class="badge">Structures</span>
+          <span class="badge">Arrays</span>
+          <span class="badge">Functions</span>
+          <span class="badge">Menu System</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="section-label">Main Features</p>
+        <div class="features-grid">
+          <div class="feature-item"><span class="fi-icon">➕</span>Add books and library members</div>
+          <div class="feature-item"><span class="fi-icon">📖</span>Borrow and return books</div>
+          <div class="feature-item"><span class="fi-icon">💰</span>Calculate late return fines</div>
+          <div class="feature-item"><span class="fi-icon">📝</span>Reserve currently borrowed books</div>
+          <div class="feature-item"><span class="fi-icon">🔎</span>Display available books</div>
+          <div class="feature-item"><span class="fi-icon">📊</span>Show borrow and reservation records</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="section-label">How It Works</p>
+        <div class="flow">
+          <div class="flow-step">Add data</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step">Borrow book</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step">Update availability</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step">Return book</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step">Check days late</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step">Calculate fine</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="section-label">Bugs Found & Fixed</p>
+        <div class="bugs-list">
+          <div class="bug-item fixed">
+            <span class="bug-tag">FIXED</span>
+            <span><strong style="color:var(--text)">No bounds check on arrays</strong> — adding more books/members than the fixed array size causes undefined behaviour. Added a check before any <code style="font-family:monospace;color:var(--accent)">bookCount++</code> or <code style="font-family:monospace;color:var(--accent)">memberCount++</code>.</span>
+          </div>
+          <div class="bug-item fixed">
+            <span class="bug-tag">FIXED</span>
+            <span><strong style="color:var(--text)">Borrow doesn't check availability</strong> — the original could mark the same book as borrowed twice. Added an <code style="font-family:monospace;color:var(--accent)">isAvailable</code> guard before creating a borrow record.</span>
+          </div>
+          <div class="bug-item fixed">
+            <span class="bug-tag">FIXED</span>
+            <span><strong style="color:var(--text)">Return doesn't clear the borrow record</strong> — returning a book updated <code style="font-family:monospace;color:var(--accent)">isAvailable</code> but left a dangling borrow record with no return date. The record is now marked resolved on return.</span>
+          </div>
+          <div class="bug-item warn">
+            <span class="bug-tag">KNOWN</span>
+            <span><strong style="color:var(--text)">IDs assigned by array index</strong> — if you delete a member mid-array, IDs shift. Would need a proper ID counter to fix properly, out of scope for this assignment.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="section-label">Core Data Structures</p>
+        <div class="code-wrap">
+          <div class="code-header">
+            <div class="dots">
+              <div class="dot dot-r"></div>
+              <div class="dot dot-y"></div>
+              <div class="dot dot-g"></div>
+            </div>
+            <span class="code-fname">library_structures.cpp</span>
+          </div>
+          <pre><code><span class="kw">struct</span> <span class="tp">Book</span> {
+    <span class="tp">int</span>    bookId;
+    <span class="tp">string</span> title;
+    <span class="tp">string</span> author;
+    <span class="tp">bool</span>   isAvailable;
+};
+
+<span class="kw">struct</span> <span class="tp">Member</span> {
+    <span class="tp">int</span>    memberId;
+    <span class="tp">string</span> name;
+    <span class="tp">string</span> phone;
+};
+
+<span class="kw">struct</span> <span class="tp">BorrowRecord</span> {
+    <span class="tp">int</span>    recordId;
+    <span class="tp">int</span>    bookId;
+    <span class="tp">int</span>    memberId;
+    <span class="tp">int</span>    daysBorrowed;
+    <span class="tp">double</span> fine;
+    <span class="tp">bool</span>   isReturned;   <span class="cm">// BUG FIX: track whether returned</span>
+};
+
+<span class="kw">struct</span> <span class="tp">Reservation</span> {
+    <span class="tp">int</span> reservationId;
+    <span class="tp">int</span> bookId;
+    <span class="tp">int</span> memberId;
+};</code></pre>
+        </div>
+      </div>
+
+      <a href="../index.html" class="back-btn">← Back to Portfolio</a>
+
+    </main>
+
+    <script>
+      function toggleTheme() {
+        const html = document.documentElement;
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        document.querySelector('.theme-icon').textContent  = isDark ? '☀️' : '🌙';
+        document.querySelector('.theme-label').textContent = isDark ? 'Light' : 'Dark';
+      }
+    </script>
+  </body>
+</html>
